@@ -12,17 +12,25 @@ namespace MSSPAssignment
     public class MSSPProgram
     {
         private const string INITIAL_DIRECTORY = "C:\\Program Files (x86)";
+        private static string LOG_PATH;
         private static int intFileCount = 0;
         private static int intDirCount = 0;
-
+        private static Stopwatch mainTimer;
+        
         public static void Main(string[] args)
         {
-            Stopwatch mainTimer = new Stopwatch();
+            LOG_PATH = string.Format("C:\\Work\\ScanLog_{0}_{1}.txt", DateTime.Now.Ticks, DateTime.Now.ToString("yyyyMMdd"));
+            
+            mainTimer = new Stopwatch();
             mainTimer.Start();
             RecurseDirectory(INITIAL_DIRECTORY);
             mainTimer.Stop();
+
+            Console.Clear();
             Console.WriteLine("Scan of " + INITIAL_DIRECTORY + " completed.");
-            Console.WriteLine(intDirCount + " directories and " + intFileCount + " files scanned in " + mainTimer.ElapsedMilliseconds + " milliseconds.");
+            WriteToLog("Scan of " + INITIAL_DIRECTORY + " completed.");
+            Console.WriteLine(intDirCount + " directories and " + intFileCount + " files scanned in " + mainTimer.Elapsed);
+            WriteToLog(intDirCount + " directories and " + intFileCount + " files scanned in " + mainTimer.Elapsed);
             Console.ReadLine();
         }
 
@@ -49,90 +57,130 @@ namespace MSSPAssignment
             Stopwatch dirTimer = new Stopwatch();
             dirTimer.Start();
 
-            string[] files = Directory.GetFiles(strDirectory, "*.exe");
+            string[] files = Directory.GetFiles(strDirectory);
 
             if (0 == files.Length)
             {
-                Console.WriteLine("No executables found in " + strDirectory);
+                WriteToLog("No executables found in " + strDirectory);
             }
             else
             {
-
-                Console.WriteLine("Scanning " + strDirectory + "\n");
-
                 foreach (var file in files)
                 {
-                    Console.WriteLine("Computing MD5 of " + file);
-                    Stopwatch computeMD5HashTimer = new Stopwatch();
+                    Console.Clear();
+                    Console.WriteLine("Scanning Directory: " + strDirectory + "\n");
+                    WriteToLog("Scanning Directory: " + strDirectory);
 
-                    computeMD5HashTimer.Start();
-                    var md5Hash = GetComputedMD5Hash(file);
-                    computeMD5HashTimer.Stop();
+                    Console.WriteLine("Scanning File: " + file);
+                    WriteToLog("Scanning File: " + file);
 
-                    if (null != md5Hash)
-                        Console.WriteLine("MD5: " + BitConverter.ToString(md5Hash, 0) + " in " + computeMD5HashTimer.ElapsedMilliseconds + " milliseconds\n");
+                    Console.WriteLine("Elapsed Time: " + mainTimer.ElapsedMilliseconds + "\n");
+                    WriteToLog("Elapsed Time: " + mainTimer.ElapsedMilliseconds);
 
+                    /*
+                    var md5HashString = GetComputedMD5Hash(file);
 
-                    Console.WriteLine("Computing CRC32 of " + file);
-                    Stopwatch computeCRC32HashTimer = new Stopwatch();
+                    if (null != md5HashString)
+                        WriteToLog("MD5: " + md5HashString);
 
-                    computeCRC32HashTimer.Start();
-                    var crc32Hash = GetComputedCRC32Hash(file);
-                    computeCRC32HashTimer.Stop();
+                    var crc32HashString = GetComputedCRC32Hash(file);
 
-                    if (null != crc32Hash)
-                        Console.WriteLine("CRC32: " + BitConverter.ToString(crc32Hash, 0) + " in " + computeCRC32HashTimer.ElapsedMilliseconds + " milliseconds\n");
+                    if (null != crc32HashString)
+                        WriteToLog("CRC32: " + crc32HashString);
+                    */
+
+                    string hex = GetHexString(file);
+
+                    if (null != hex)
+                    {
+                        if (hex.StartsWith(FileExtensionTypes.EXE))
+                        {
+                            WriteToLog("EXE!");
+                        }
+                        else if (hex.StartsWith(FileExtensionTypes.MSI))
+                        {
+                            WriteToLog("MSI!");
+                        }
+                    }
+
+                    /*if(null != hex)
+                        WriteToLog("Hex: " + hex);*/
 
                     intFileCount++;
                 }
-
                 dirTimer.Stop();
-                Console.WriteLine("Scan of " + strDirectory + " in " + dirTimer.ElapsedMilliseconds + " milliseconds\n");
+                WriteToLog("Scan of " + strDirectory);
             }
         }
 
-        public static byte[] GetComputedMD5Hash(string strFile)
+        /*
+        public static string GetComputedMD5Hash(string strFile)
         {
             try
             {
                 using (var md5 = MD5.Create())
                 {
-                    using (var stream = File.OpenRead(strFile))
+                    using (FileStream oFileStream = new FileStream(strFile, FileMode.Open))
                     {
-                        return md5.ComputeHash(stream);
+                        return BitConverter.ToString(md5.ComputeHash(oFileStream), 0);
                     }
                 }
             }
             catch (Exception ex)
             {
                 Console.WriteLine("Error scanning " + strFile + ". " + ex.Message);
+                WriteToLog("Error scanning " + strFile + ". " + ex.Message);
                 return null;
             }
         }
 
-        public static byte[] GetComputedCRC32Hash(string strFile)
+        public static string GetComputedCRC32Hash(string strFile)
         {
             try
             {
                 using (var crc32 = CRC32.Create())
                 {
-                    using (var stream = File.OpenRead(strFile))
+                    using (FileStream oFileStream = new FileStream(strFile, FileMode.Open))
                     {
-                        return crc32.ComputeHash(stream);
+                        return BitConverter.ToString(crc32.ComputeHash(oFileStream), 0);
                     }
                 }
             }
             catch (Exception ex)
             {
                 Console.WriteLine("Error scanning " + strFile + ". " + ex.Message);
+                WriteToLog("Error scanning " + strFile + ". " + ex.Message);
+                return null;
+            }
+        }
+        */
+
+        public static string GetHexString(string strFile)
+        {
+            try
+            {
+                using (FileStream oFileStream = new FileStream(strFile, FileMode.Open))
+                {
+                    byte[] arrBytes = new byte[oFileStream.Length];
+
+                    oFileStream.Read(arrBytes, 0, int.Parse(oFileStream.Length.ToString()));
+                    return BitConverter.ToString(arrBytes);
+                }
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine("Error scanning " + strFile + ". " + ex.Message);
+                WriteToLog("Error scanning " + strFile + ". " + ex.Message);
                 return null;
             }
         }
 
-        private static string GetTimeStringFromMillis(long lngMillis)
+        private static void WriteToLog(string strLogEntry)
         {
-            TimeSpan tsTime = TimeSpan.FromMilliseconds(lngMillis);
-            return string.Format("{0}:{1}:{2}", tsTime.TotalHours, tsTime.TotalMinutes, tsTime.TotalSeconds);
+            using (StreamWriter stream = new StreamWriter(LOG_PATH, true))
+            {
+                stream.WriteLine(strLogEntry);
+            }
         }
     }
 }

@@ -47,6 +47,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="CRC32.cs" />
+    <Compile Include="FileExtensionTypes.cs" />
     <Compile Include="MSSPProgram.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
