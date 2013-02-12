@@ -128,5 +128,11 @@ namespace MSSPAssignment
                 return null;
             }
         }
+
+        private static string GetTimeStringFromMillis(long lngMillis)
+        {
+            TimeSpan tsTime = TimeSpan.FromMilliseconds(lngMillis);
+            return string.Format("{0}:{1}:{2}", tsTime.TotalHours, tsTime.TotalMinutes, tsTime.TotalSeconds);
+        }
     }
 }
