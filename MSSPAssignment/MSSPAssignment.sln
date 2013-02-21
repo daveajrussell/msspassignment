@@ -1,7 +1,9 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 2012
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MSSPAssignment", "MSSPAssignment\MSSPAssignment.csproj", "{486BB51C-18CC-43FA-82CF-E1A2B042093C}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Engine", "MSSPAssignment\Engine.csproj", "{486BB51C-18CC-43FA-82CF-E1A2B042093C}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MSSPVirusScanner", "MSSPVirusScanner\MSSPVirusScanner.csproj", "{26BD20A5-DD82-49C2-AFE2-9C9212128A38}"
 EndProject
 Global
 	GlobalSection(SubversionScc) = preSolution
@@ -17,6 +19,10 @@ Global
 		{486BB51C-18CC-43FA-82CF-E1A2B042093C}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{486BB51C-18CC-43FA-82CF-E1A2B042093C}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{486BB51C-18CC-43FA-82CF-E1A2B042093C}.Release|Any CPU.Build.0 = Release|Any CPU
+		{26BD20A5-DD82-49C2-AFE2-9C9212128A38}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{26BD20A5-DD82-49C2-AFE2-9C9212128A38}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{26BD20A5-DD82-49C2-AFE2-9C9212128A38}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{26BD20A5-DD82-49C2-AFE2-9C9212128A38}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
