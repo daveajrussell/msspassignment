@@ -16,7 +16,7 @@ namespace MSSPAssignment
         private static int intFileCount = 0;
         private static int intDirCount = 0;
         private static Stopwatch mainTimer;
-        
+
         public static void Main(string[] args)
         {
             LOG_PATH = string.Format("C:\\Work\\ScanLog_{0}_{1}.txt", DateTime.Now.Ticks, DateTime.Now.ToString("yyyyMMdd"));
