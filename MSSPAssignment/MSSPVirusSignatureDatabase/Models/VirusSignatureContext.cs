@@ -11,10 +11,15 @@ namespace MSSPVirusSignatureDatabase.Models
             Database.SetInitializer<VirusSignatureContext>(null);
         }
 
-		public VirusSignatureContext()
+        public VirusSignatureContext()
+        {
+
+        }
+
+		/*public VirusSignatureContext()
             : base("Name=VirusSignatureContext")
 		{
-		}
+		}*/
 
         public DbSet<VIRUS_SIGNATURE> VIRUS_SIGNATURE { get; set; }
 
