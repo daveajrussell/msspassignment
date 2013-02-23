@@ -16,14 +16,17 @@ namespace MSSPVirusScanner
         private string LogPath { get; set; }
         private BackgroundWorker Worker { get; set; }
         private DoWorkEventArgs WorkerEvent { get; set; }
-        private MSSPVirusScannerForm Context{ get; set; }
+        private MSSPVirusScannerForm Context { get; set; }
         private SignatureKB Signatures;
-        private IEnumerable<VIRUS_SIGNATURE> VirusSignatures { get; set; }
-        
-        private static int intTotalFileCount = 0;
-        private static int intDirectoryFileCount = 0;
-        private static int intDirCount = 0;
+        private XMLVirusSignatures VirusSignatures { get; set; }
+
+        private static int intAccumulatingFileCount;
+        private static int intTotalFileCount;
+        private static int intTotalDirectoryCount;
+        private static int intDirectoryCount;
         private static Stopwatch mainTimer;
+
+        private Thread oFileCounterThread;
 
         public delegate void ProgressUpdateDelegate(string strDirectory, string strFile, string strFileCount);
         public delegate void ScanCompleteDelegate(string strDirectory, string strDirectoryCount, string strFileCount, long lngElapsedMillis);
@@ -35,14 +38,15 @@ namespace MSSPVirusScanner
 
         public Scanner(string strLogPath, MSSPVirusScannerForm oMSSPVirusScannerForm)
         {
+            intAccumulatingFileCount = 1;
+            intTotalFileCount = 1;
+            intTotalDirectoryCount = 1;
+            intDirectoryCount = 1;
+
             LogPath = strLogPath;
             Context = oMSSPVirusScannerForm;
             Signatures = new SignatureKB();
             VirusSignatures = Signatures.GetKnownSignatures();
-
-            intTotalFileCount = 0;
-            intDirectoryFileCount = 0;
-            intDirCount = 0;
         }
 
         public void InitiateScan(BackgroundWorker oWorker, DoWorkEventArgs e)
@@ -52,24 +56,44 @@ namespace MSSPVirusScanner
 
             mainTimer = new Stopwatch();
             mainTimer.Start();
+            oFileCounterThread = new Thread(() => RecursiveFileCounter(e.Argument.ToString()));
+            oFileCounterThread.Start();
             RecurseDirectory(e.Argument.ToString());
             mainTimer.Stop();
 
             Logger.WriteToLog(LogPath, "Scan of " + e.Argument.ToString() + " Completed.");
-            Logger.WriteToLog(LogPath, intDirCount + " Directories and " + intTotalFileCount + " Files Scanned in " + mainTimer.Elapsed);
+            Logger.WriteToLog(LogPath, intDirectoryCount + " Directories and " + intTotalFileCount + " Files Scanned in " + mainTimer.Elapsed);
 
             if (null != ScanCompleteHandler)
-                Context.Invoke(ScanCompleteHandler, e.Argument.ToString(), intDirCount.ToString(), intTotalFileCount.ToString(), mainTimer.ElapsedMilliseconds);
+            {
+                oFileCounterThread.Abort();
+                oFileCounterThread = null;
+                Context.Invoke(ScanCompleteHandler, e.Argument.ToString(), intDirectoryCount.ToString(), intTotalFileCount.ToString(), mainTimer.ElapsedMilliseconds);
+            }
 
             Signatures.Close();
+        }
+
+        private void RecursiveFileCounter(string strDirectory)
+        {
+            try
+            {
+                foreach (var dir in Directory.GetDirectories(strDirectory))
+                {
+                    int count = Directory.GetFiles(strDirectory).Length;
+                    intAccumulatingFileCount += count;
+                    RecurseDirectory(dir);
+                }
+            }
+            catch (Exception ex)
+            {
+            }
         }
 
         private void RecurseDirectory(string strDirectory)
         {
             if (Worker.CancellationPending)
-            {
                 Signatures.Close();
-            }
             else
             {
                 try
@@ -78,14 +102,13 @@ namespace MSSPVirusScanner
 
                     if (0 == dirs.Length)
                     {
-                        Worker.ReportProgress(0);
                         Scan(strDirectory);
                     }
                     else
                         foreach (var dir in dirs)
                         {
                             RecurseDirectory(dir);
-                            intDirCount++;
+                            intDirectoryCount++;
                         }
                 }
                 catch (Exception ex)
@@ -101,7 +124,6 @@ namespace MSSPVirusScanner
         private void Scan(string strDirectory)
         {
             string[] files = Directory.GetFiles(strDirectory);
-            intDirectoryFileCount = 0;
 
             if (0 != files.Length)
                 foreach (var strFile in files)
@@ -109,13 +131,12 @@ namespace MSSPVirusScanner
                     if (null != ProgressUpdateHandler)
                         Context.Invoke(ProgressUpdateHandler, strDirectory, strFile, intTotalFileCount.ToString());
 
-                    int intPercentComplete = (int)((float)intDirectoryFileCount / (float)files.Length * 100);
+                    int intPercentComplete = (int)((float)intTotalFileCount / (float)intAccumulatingFileCount * 100);
 
                     Worker.ReportProgress(intPercentComplete);
 
                     ExamineFileExtensionSignature(strDirectory, strFile);
                     intTotalFileCount++;
-                    intDirectoryFileCount++;
                 }
         }
 
@@ -155,7 +176,7 @@ namespace MSSPVirusScanner
                     oFileStream.Read(arrBytes, 0, int.Parse(oFileStream.Length.ToString()));
                     strHex = BitConverter.ToString(arrBytes);
 
-                    foreach (var signature in VirusSignatures)
+                    foreach (var signature in VirusSignatures.Signatures)
                     {
                         if (strHex.Contains(signature.SIGNATURE_STRING))
                         {

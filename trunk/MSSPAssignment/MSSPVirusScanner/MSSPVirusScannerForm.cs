@@ -17,7 +17,6 @@ namespace MSSPVirusScanner
         private string LogPath { get; set; }
 
         private Scanner mScanner;
-        private Thread mScanThread;
         private Stopwatch mProgramTimer;
 
         public MSSPVirusScannerForm()
@@ -32,7 +31,6 @@ namespace MSSPVirusScanner
 
             this.bgScanner.DoWork += bgScanner_DoWork;
             this.bgScanner.ProgressChanged += bgScanner_ProgressChanged;
-            this.bgScanner.RunWorkerCompleted += bgScanner_RunWorkerCompleted;
 
             this.bgScanner.WorkerReportsProgress = true;
             this.bgScanner.WorkerSupportsCancellation = true;
@@ -54,13 +52,12 @@ namespace MSSPVirusScanner
             this.btnCancel.Enabled = true;
             this.btnScan.Enabled = false;
 
-            LogPath = string.Format("C:\\Work\\ScanLogs\\ScanLog_{0}_{1}.txt", DateTime.Now.Ticks, DateTime.Now.ToString("yyyyMMdd"));
+            this.txtCurrentDir.Text = "";
+            this.txtCurrentFile.Text = "";
+            this.txtItemsScanned.Text = "";
+            this.txtElapsedTime.Text = "";
 
-            /*
-            string strDirectoryToScan = tvDirectories.SelectedNode.FullPath;
-            mScanThread = new Thread(() => mScanner.InitiateScan(strDirectoryToScan));
-            mScanThread.Start();
-            */
+            LogPath = string.Format("C:\\Work\\ScanLogs\\ScanLog_{0}_{1}.txt", DateTime.Now.Ticks, DateTime.Now.ToString("yyyyMMdd"));
 
             mScanner = new Scanner(LogPath, this);
             mScanner.ProgressUpdateHandler += mScanner_ProgressUpdateHandler;
@@ -77,19 +74,14 @@ namespace MSSPVirusScanner
             mScanner.InitiateScan(oWorker, e);
         }
 
-        private void bgScanner_RunWorkerCompleted(object sender, RunWorkerCompletedEventArgs e)
-        {
-
-        }
-
         private void bgScanner_ProgressChanged(object sender, ProgressChangedEventArgs e)
         {
-            this.progressBar1.Value = e.ProgressPercentage;
+            if (100 >= e.ProgressPercentage)
+                this.progressBar1.Value = e.ProgressPercentage;
         }
 
         private void btnCancel_Click(object sender, EventArgs e)
         {
-            //mScanThread.Abort();
             bgScanner.CancelAsync();
             bgScanner.Dispose();
             tickTimer.Stop();
@@ -101,11 +93,6 @@ namespace MSSPVirusScanner
             this.btnScan.Enabled = true;
 
             mScanner = null;
-
-            /*txtCurrentDir.Text = "";
-            txtCurrentFile.Text = "";
-            txtItemsScanned.Text = "";
-            txtElapsedTime.Text = "Scan cancelled at " + DateTime.Now.ToShortTimeString();*/
 
             Logger.WriteToLog(LogPath, "Scan Cancelled by User");
         }
@@ -119,9 +106,17 @@ namespace MSSPVirusScanner
 
         private void mScanner_ScanCompleteHandler(string strDirectory, string strDirectoryCount, string strFileCount, long lngElapsedMillis)
         {
+            bgScanner.CancelAsync();
+            bgScanner.Dispose();
             tickTimer.Stop();
             mProgramTimer.Stop();
             mProgramTimer.Reset();
+
+            mScanner = null;
+
+            this.progressBar1.Value = 0;
+            this.btnCancel.Enabled = false;
+            this.btnScan.Enabled = true;
 
             txtCurrentDir.Text = "Scan of " + strDirectory + " Complete!";
             txtCurrentFile.Text = "";

@@ -140,27 +140,24 @@
             this.txtItemsScanned.AutoSize = true;
             this.txtItemsScanned.Location = new System.Drawing.Point(108, 103);
             this.txtItemsScanned.Name = "txtItemsScanned";
-            this.txtItemsScanned.Size = new System.Drawing.Size(80, 13);
+            this.txtItemsScanned.Size = new System.Drawing.Size(0, 13);
             this.txtItemsScanned.TabIndex = 20;
-            this.txtItemsScanned.Text = "Not Yet Started";
             // 
             // txtElapsedTime
             // 
             this.txtElapsedTime.AutoSize = true;
             this.txtElapsedTime.Location = new System.Drawing.Point(108, 65);
             this.txtElapsedTime.Name = "txtElapsedTime";
-            this.txtElapsedTime.Size = new System.Drawing.Size(80, 13);
+            this.txtElapsedTime.Size = new System.Drawing.Size(0, 13);
             this.txtElapsedTime.TabIndex = 19;
-            this.txtElapsedTime.Text = "Not Yet Started";
             // 
             // txtStartTime
             // 
             this.txtStartTime.AutoSize = true;
             this.txtStartTime.Location = new System.Drawing.Point(108, 28);
             this.txtStartTime.Name = "txtStartTime";
-            this.txtStartTime.Size = new System.Drawing.Size(80, 13);
+            this.txtStartTime.Size = new System.Drawing.Size(0, 13);
             this.txtStartTime.TabIndex = 18;
-            this.txtStartTime.Text = "Not Yet Started";
             // 
             // txtCurrentFile
             // 
@@ -182,6 +179,7 @@
             // 
             // btnCancel
             // 
+            this.btnCancel.Enabled = false;
             this.btnCancel.Location = new System.Drawing.Point(466, 261);
             this.btnCancel.Name = "btnCancel";
             this.btnCancel.Size = new System.Drawing.Size(180, 23);
@@ -298,10 +296,6 @@
             this.btnScan.TabIndex = 0;
             this.btnScan.Text = "Scan";
             this.btnScan.UseVisualStyleBackColor = true;
-            // 
-            // bgScanner
-            // 
-            this.bgScanner.DoWork += new System.ComponentModel.DoWorkEventHandler(this.bgScanner_DoWork);
             // 
             // MSSPVirusScannerForm
             // 
