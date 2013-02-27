@@ -11,6 +11,27 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "FileMon", "TestBehaviourAna
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "FileMonInject", "FileMonInject\FileMonInject.csproj", "{568D29A7-15B6-4090-A4FC-C1A93B64AB9F}"
 EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Dependencies", "Dependencies", "{1E22C635-88CD-4ACB-9087-DFEDAC349CCC}"
+	ProjectSection(SolutionItems) = preProject
+		..\..\NetFX4.0\ComplexParameterInject.dll = ..\..\NetFX4.0\ComplexParameterInject.dll
+		..\..\NetFX4.0\ComplexParameterTest.exe = ..\..\NetFX4.0\ComplexParameterTest.exe
+		..\..\NetFX4.0\EasyHook.dll = ..\..\NetFX4.0\EasyHook.dll
+		..\..\NetFX4.0\easyhook.h = ..\..\NetFX4.0\easyhook.h
+		..\..\NetFX4.0\EasyHook32.dll = ..\..\NetFX4.0\EasyHook32.dll
+		..\..\NetFX4.0\EasyHook32Svc.exe = ..\..\NetFX4.0\EasyHook32Svc.exe
+		..\..\NetFX4.0\EasyHook64.dll = ..\..\NetFX4.0\EasyHook64.dll
+		..\..\NetFX4.0\EasyHook64.lib = ..\..\NetFX4.0\EasyHook64.lib
+		..\..\NetFX4.0\EasyHook64Svc.exe = ..\..\NetFX4.0\EasyHook64Svc.exe
+		..\..\NetFX4.0\EasyHookTestCert.cer = ..\..\NetFX4.0\EasyHookTestCert.cer
+		..\..\NetFX4.0\FileMon.exe = ..\..\NetFX4.0\FileMon.exe
+		..\..\NetFX4.0\FileMonInject.dll = ..\..\NetFX4.0\FileMonInject.dll
+		..\..\NetFX4.0\KNOWN ISSUES.txt = ..\..\NetFX4.0\KNOWN ISSUES.txt
+		..\..\NetFX4.0\LICENSE.txt = ..\..\NetFX4.0\LICENSE.txt
+		..\..\NetFX4.0\ProcessMonitor.exe = ..\..\NetFX4.0\ProcessMonitor.exe
+		..\..\NetFX4.0\ProcMonInject.dll = ..\..\NetFX4.0\ProcMonInject.dll
+		..\..\NetFX4.0\README.txt = ..\..\NetFX4.0\README.txt
+	EndProjectSection
+EndProject
 Global
 	GlobalSection(SubversionScc) = preSolution
 		Svn-Managed = True
