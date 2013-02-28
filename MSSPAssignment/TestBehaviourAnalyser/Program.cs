@@ -5,6 +5,7 @@ using System.Text;
 using EasyHook;
 using System.Runtime.Remoting;
 using System.Diagnostics;
+using System.Management;
 
 namespace FileMon
 {
@@ -53,18 +54,23 @@ namespace FileMon
 
                 foreach (var proc in Process.GetProcesses())
                 {
-                    //if(proc.
-                    try
+                    string strQuery = string.Format("Select * from Win32_Process Where ProcessID = {0}", proc.Id);
+                    ManagementObjectSearcher search = new ManagementObjectSearcher(strQuery);
+                    ManagementObjectCollection processList = search.Get();
+
+                    foreach (ManagementObject obj in processList)
                     {
-                        RemoteHooking.Inject(
-                           proc.Id,
-                           @"FileMonInject.dll",
-                           @"FileMonInject.dll",
-                           ChannelName);
-                    }
-                    catch (Exception ex)
-                    {
-                        // do not raise
+                        string[] argList = new string[] { string.Empty, string.Empty };
+                        obj.InvokeMethod("GetOwner", argList);
+
+                        if ("SYSTEM" != argList[1])
+                        {
+                            RemoteHooking.Inject(
+                               proc.Id,
+                               @"FileMonInject.dll",
+                               @"FileMonInject.dll",
+                               ChannelName);
+                        }
                     }
                 }
                 Console.ReadLine();
