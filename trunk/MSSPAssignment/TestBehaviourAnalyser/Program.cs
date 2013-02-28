@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text;
 using EasyHook;
 using System.Runtime.Remoting;
+using System.Diagnostics;
 
 namespace FileMon
 {
@@ -50,11 +51,22 @@ namespace FileMon
                     ref ChannelName,
                     WellKnownObjectMode.SingleCall);
 
-                RemoteHooking.Inject(
-                    /*Int32.Parse(args[0])*/8032,
-                    @"FileMonInject.dll",
-                    @"FileMonInject.dll",
-                    ChannelName);
+                foreach (var proc in Process.GetProcesses())
+                {
+                    //if(proc.
+                    try
+                    {
+                        RemoteHooking.Inject(
+                           proc.Id,
+                           @"FileMonInject.dll",
+                           @"FileMonInject.dll",
+                           ChannelName);
+                    }
+                    catch (Exception ex)
+                    {
+                        // do not raise
+                    }
+                }
                 Console.ReadLine();
             }
             catch (Exception ex)

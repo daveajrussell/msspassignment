@@ -54,10 +54,10 @@
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="EasyHook">
-      <HintPath>..\..\..\NetFX4.0\EasyHook.dll</HintPath>
+      <HintPath>..\Dependencies\EasyHook.dll</HintPath>
     </Reference>
     <Reference Include="EasyHook64Svc">
-      <HintPath>..\..\..\NetFX4.0\EasyHook64Svc.exe</HintPath>
+      <HintPath>..\Dependencies\EasyHook64Svc.exe</HintPath>
     </Reference>
     <Reference Include="FileMonInject">
       <HintPath>..\FileMonInject\bin\Debug\FileMonInject.dll</HintPath>
