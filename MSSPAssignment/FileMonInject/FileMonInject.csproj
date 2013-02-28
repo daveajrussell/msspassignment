@@ -42,7 +42,7 @@
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="EasyHook">
-      <HintPath>..\..\..\NetFX4.0\EasyHook.dll</HintPath>
+      <HintPath>..\Dependencies\EasyHook.dll</HintPath>
     </Reference>
     <Reference Include="FileMon">
       <HintPath>..\TestBehaviourAnalyser\bin\Debug\FileMon.exe</HintPath>
