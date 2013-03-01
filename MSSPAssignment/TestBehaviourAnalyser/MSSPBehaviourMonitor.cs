@@ -7,13 +7,13 @@ using System.Runtime.Remoting;
 using System.Diagnostics;
 using System.Management;
 
-namespace FileMon
+namespace MSSPBehaviourMonitor
 {
-    public class FileMonInterface : MarshalByRefObject
+    public class MSSPBehaviourMonitorInterface : MarshalByRefObject
     {
         public void IsInstalled(Int32 intClientPID)
         {
-            Console.WriteLine("FileMon has been installed in target {0}. \r\n", intClientPID);
+            Console.WriteLine("Behaviour of Process {0} is now being monitored\r\n", intClientPID);
         }
 
         public void OnCreateFile(Int32 intClientPID, String[] arrFileNames)
@@ -35,7 +35,7 @@ namespace FileMon
         }
     }
 
-    class Program
+    class MSSPBehaviourMonitor
     {
         static String ChannelName = null;
 
@@ -44,33 +44,23 @@ namespace FileMon
             try
             {
                 Config.Register(
-                    "A FileMon like demo application.",
-                    @"FileMon.exe",
-                    @"FileMonInject.dll");
+                    "MSSP Behaviour Monitor",
+                    @"MSSPBehaviourMonitor.exe",
+                    @"MSSPMonitorInject.dll");
 
-                RemoteHooking.IpcCreateServer<FileMonInterface>(
+                RemoteHooking.IpcCreateServer<MSSPBehaviourMonitorInterface>(
                     ref ChannelName,
                     WellKnownObjectMode.SingleCall);
 
-                foreach (var proc in Process.GetProcesses())
+                foreach (var proc in Process.GetProcesses())    
                 {
-                    string strQuery = string.Format("Select * from Win32_Process Where ProcessID = {0}", proc.Id);
-                    ManagementObjectSearcher search = new ManagementObjectSearcher(strQuery);
-                    ManagementObjectCollection processList = search.Get();
-
-                    foreach (ManagementObject obj in processList)
+                    if (proc.ProcessName == "MaliciousProgram.vshost" || proc.ProcessName == "MaliciousProgram")
                     {
-                        string[] argList = new string[] { string.Empty, string.Empty };
-                        obj.InvokeMethod("GetOwner", argList);
-
-                        if ("SYSTEM" != argList[1])
-                        {
-                            RemoteHooking.Inject(
-                               proc.Id,
-                               @"FileMonInject.dll",
-                               @"FileMonInject.dll",
-                               ChannelName);
-                        }
+                        RemoteHooking.Inject(
+                                   proc.Id,
+                                   @"MSSPMonitorInject.dll",
+                                   @"MSSPMonitorInject.dll",
+                                   ChannelName);
                     }
                 }
                 Console.ReadLine();

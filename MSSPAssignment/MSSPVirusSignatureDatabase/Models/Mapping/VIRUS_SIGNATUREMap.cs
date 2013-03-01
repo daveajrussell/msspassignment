@@ -8,11 +8,14 @@ namespace MSSPVirusSignatureDatabase.Models.Mapping
         public VIRUS_SIGNATUREMap()
         {
             // Primary Key
-            this.HasKey(t => new { t.SIGNATURE_ID, t.SIGNATURE_STRING });
+            this.HasKey(t => new { t.SIGNATURE_ID, t.SIGNATURE_LOCATION, t.SIGNATURE_STRING });
 
             // Properties
             this.Property(t => t.SIGNATURE_ID)
                 .HasDatabaseGeneratedOption(DatabaseGeneratedOption.Identity);
+
+            this.Property(t => t.SIGNATURE_LOCATION)
+                .IsRequired();
 
             this.Property(t => t.SIGNATURE_STRING)
                 .IsRequired();
@@ -20,6 +23,7 @@ namespace MSSPVirusSignatureDatabase.Models.Mapping
             // Table & Column Mappings
             this.ToTable("VIRUS_SIGNATURE");
             this.Property(t => t.SIGNATURE_ID).HasColumnName("SIGNATURE_ID");
+            this.Property(t => t.SIGNATURE_LOCATION).HasColumnName("SIGNATURE_LOCATION");
             this.Property(t => t.SIGNATURE_STRING).HasColumnName("SIGNATURE_STRING");
         }
     }

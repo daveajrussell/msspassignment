@@ -7,8 +7,8 @@
     <ProjectGuid>{568D29A7-15B6-4090-A4FC-C1A93B64AB9F}</ProjectGuid>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>FileMonInject</RootNamespace>
-    <AssemblyName>FileMonInject</AssemblyName>
+    <RootNamespace>MSSPMonitorInject</RootNamespace>
+    <AssemblyName>MSSPMonitorInject</AssemblyName>
     <TargetFrameworkVersion>v4.0</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
   </PropertyGroup>
@@ -38,7 +38,7 @@
     <SignAssembly>true</SignAssembly>
   </PropertyGroup>
   <PropertyGroup>
-    <AssemblyOriginatorKeyFile>FileMon.pfx</AssemblyOriginatorKeyFile>
+    <AssemblyOriginatorKeyFile>MSSPMonitorInjectKey.snk</AssemblyOriginatorKeyFile>
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="EasyHook">
@@ -46,6 +46,9 @@
     </Reference>
     <Reference Include="FileMon">
       <HintPath>..\TestBehaviourAnalyser\bin\Debug\FileMon.exe</HintPath>
+    </Reference>
+    <Reference Include="MSSPVirusScanner">
+      <HintPath>..\MSSPVirusScanner\bin\Debug\MSSPVirusScanner.exe</HintPath>
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />
@@ -56,11 +59,11 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Main.cs" />
+    <Compile Include="MSSPMonitorInject.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="FileMon.pfx" />
+    <None Include="MSSPMonitorInjectKey.snk" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
