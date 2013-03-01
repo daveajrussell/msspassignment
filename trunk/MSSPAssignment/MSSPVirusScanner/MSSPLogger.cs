@@ -6,7 +6,7 @@ using System.Text;
 
 namespace MSSPVirusScanner
 {
-    public static class Logger
+    public static class MSSPLogger
     {
         public static void WriteToLog(string strLogPath, string strLogEntry)
         {

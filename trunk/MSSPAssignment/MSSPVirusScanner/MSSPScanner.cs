@@ -11,22 +11,19 @@ using System.ComponentModel;
 
 namespace MSSPVirusScanner
 {
-    public class Scanner
+    public class MSSPScanner
     {
         private string LogPath { get; set; }
         private BackgroundWorker Worker { get; set; }
         private DoWorkEventArgs WorkerEvent { get; set; }
         private MSSPVirusScannerForm Context { get; set; }
-        private SignatureKB Signatures;
+        private MSSPSignatureDatabase Signatures;
         private XMLVirusSignatures VirusSignatures { get; set; }
 
         private static int intAccumulatingFileCount;
         private static int intTotalFileCount;
-        private static int intTotalDirectoryCount;
         private static int intDirectoryCount;
         private static Stopwatch mainTimer;
-
-        private Thread oFileCounterThread;
 
         public delegate void ProgressUpdateDelegate(string strDirectory, string strFile, string strFileCount);
         public delegate void ScanCompleteDelegate(string strDirectory, string strDirectoryCount, string strFileCount, long lngElapsedMillis);
@@ -36,16 +33,15 @@ namespace MSSPVirusScanner
         public event ScanCompleteDelegate ScanCompleteHandler;
         public event VirusDetectedDelegate VirusDetectedHandler;
 
-        public Scanner(string strLogPath, MSSPVirusScannerForm oMSSPVirusScannerForm)
+        public MSSPScanner(string strLogPath, MSSPVirusScannerForm oMSSPVirusScannerForm)
         {
             intAccumulatingFileCount = 1;
             intTotalFileCount = 1;
-            intTotalDirectoryCount = 1;
             intDirectoryCount = 1;
 
             LogPath = strLogPath;
             Context = oMSSPVirusScannerForm;
-            Signatures = new SignatureKB();
+            Signatures = new MSSPSignatureDatabase();
             VirusSignatures = Signatures.GetKnownSignatures();
         }
 
@@ -56,18 +52,14 @@ namespace MSSPVirusScanner
 
             mainTimer = new Stopwatch();
             mainTimer.Start();
-            oFileCounterThread = new Thread(() => RecursiveFileCounter(e.Argument.ToString()));
-            oFileCounterThread.Start();
             RecurseDirectory(e.Argument.ToString());
             mainTimer.Stop();
 
-            Logger.WriteToLog(LogPath, "Scan of " + e.Argument.ToString() + " Completed.");
-            Logger.WriteToLog(LogPath, intDirectoryCount + " Directories and " + intTotalFileCount + " Files Scanned in " + mainTimer.Elapsed);
+            MSSPLogger.WriteToLog(LogPath, "Scan of " + e.Argument.ToString() + " Completed.");
+            MSSPLogger.WriteToLog(LogPath, intDirectoryCount + " Directories and " + intTotalFileCount + " Files Scanned in " + mainTimer.Elapsed);
 
             if (null != ScanCompleteHandler)
             {
-                oFileCounterThread.Abort();
-                oFileCounterThread = null;
                 Context.Invoke(ScanCompleteHandler, e.Argument.ToString(), intDirectoryCount.ToString(), intTotalFileCount.ToString(), mainTimer.ElapsedMilliseconds);
             }
 
@@ -113,7 +105,7 @@ namespace MSSPVirusScanner
                 }
                 catch (Exception ex)
                 {
-                    Logger.WriteToLog(LogPath, "Error scanning " + strDirectory + ". " + ex.Message);
+                    MSSPLogger.WriteToLog(LogPath, "Error scanning " + strDirectory + ". " + ex.Message);
 
                     if (ex is ThreadAbortException || ex is OutOfMemoryException)
                         Signatures.Close();
@@ -126,18 +118,23 @@ namespace MSSPVirusScanner
             string[] files = Directory.GetFiles(strDirectory);
 
             if (0 != files.Length)
+            {
                 foreach (var strFile in files)
                 {
                     if (null != ProgressUpdateHandler)
                         Context.Invoke(ProgressUpdateHandler, strDirectory, strFile, intTotalFileCount.ToString());
 
-                    int intPercentComplete = (int)((float)intTotalFileCount / (float)intAccumulatingFileCount * 100);
+                    int intPercentComplete = (int)((float)intAccumulatingFileCount / (float)files.Length * 100);
 
                     Worker.ReportProgress(intPercentComplete);
 
                     ExamineFileExtensionSignature(strDirectory, strFile);
+                    intAccumulatingFileCount++;
                     intTotalFileCount++;
                 }
+            }
+            intAccumulatingFileCount = 0;
+
         }
 
         private void ExamineFileExtensionSignature(string strDirectory, string strFile)
@@ -159,7 +156,7 @@ namespace MSSPVirusScanner
             }
             catch (Exception ex)
             {
-                Logger.WriteToLog(LogPath, "Error Examining " + strFile.Substring(strFile.LastIndexOf('\\') + 1) + " Extension Signature. Error: " + ex.Message);
+                MSSPLogger.WriteToLog(LogPath, "Error Examining " + strFile.Substring(strFile.LastIndexOf('\\') + 1) + " Extension Signature. Error: " + ex.Message);
             }
         }
 
@@ -170,7 +167,7 @@ namespace MSSPVirusScanner
             {
                 using (FileStream oFileStream = new FileStream(strFile, FileMode.Open))
                 {
-                    Logger.WriteToLog(LogPath, "Examining: " + strFile.Substring(strFile.LastIndexOf('\\') + 1));
+                    MSSPLogger.WriteToLog(LogPath, "Examining: " + strFile.Substring(strFile.LastIndexOf('\\') + 1));
 
                     byte[] arrBytes = new byte[oFileStream.Length];
                     oFileStream.Read(arrBytes, 0, int.Parse(oFileStream.Length.ToString()));
@@ -180,7 +177,7 @@ namespace MSSPVirusScanner
                     {
                         if (strHex.Contains(signature.SIGNATURE_STRING))
                         {
-                            Logger.WriteToLog(LogPath, "Virus with ID:" + signature.SIGNATURE_ID + " And Signature:" + signature.SIGNATURE_STRING + " Detected in File:" + strFile.Substring(strFile.LastIndexOf('\\') + 1));
+                            MSSPLogger.WriteToLog(LogPath, "Virus with ID:" + signature.SIGNATURE_ID + " And Signature:" + signature.SIGNATURE_STRING + " Detected in File:" + strFile.Substring(strFile.LastIndexOf('\\') + 1));
 
                             if (null != VirusDetectedHandler)
                                 Context.Invoke(VirusDetectedHandler, strFile.Substring(strFile.LastIndexOf('\\') + 1), strDirectory);
@@ -190,7 +187,7 @@ namespace MSSPVirusScanner
             }
             catch (Exception ex)
             {
-                Logger.WriteToLog(LogPath, "Error Examining " + strFile.Substring(strFile.LastIndexOf('\\') + 1) + " for Virus Signatures. Error: " + ex.Message);
+                MSSPLogger.WriteToLog(LogPath, "Error Examining " + strFile.Substring(strFile.LastIndexOf('\\') + 1) + " for Virus Signatures. Error: " + ex.Message);
             }
         }
     }

@@ -7,9 +7,7 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MSSPVirusScanner", "MSSPVir
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MSSPVirusSignatureDatabase", "MSSPVirusSignatureDatabase\MSSPVirusSignatureDatabase.csproj", "{6B8CC002-E500-4165-8DCD-0AE00B2FD247}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "FileMon", "TestBehaviourAnalyser\FileMon.csproj", "{D456E609-3705-45D4-83BA-50A3C37E6AA6}"
-EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "FileMonInject", "FileMonInject\FileMonInject.csproj", "{568D29A7-15B6-4090-A4FC-C1A93B64AB9F}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MSSPMonitorInject", "FileMonInject\MSSPMonitorInject.csproj", "{568D29A7-15B6-4090-A4FC-C1A93B64AB9F}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Dependencies", "Dependencies", "{D38B71C4-CC0C-4E99-9FE0-03DC7C616A52}"
 	ProjectSection(SolutionItems) = preProject
@@ -18,6 +16,8 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Dependencies", "Dependencie
 		Dependencies\EasyHook64.lib = Dependencies\EasyHook64.lib
 		Dependencies\EasyHook64Svc.exe = Dependencies\EasyHook64Svc.exe
 	EndProjectSection
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MSSPMaliciousProgram", "MaliciousProgram\MSSPMaliciousProgram.csproj", "{51900A05-4E76-44BA-8519-B335E3CA7F8E}"
 EndProject
 Global
 	GlobalSection(SubversionScc) = preSolution
@@ -41,14 +41,14 @@ Global
 		{6B8CC002-E500-4165-8DCD-0AE00B2FD247}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{6B8CC002-E500-4165-8DCD-0AE00B2FD247}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{6B8CC002-E500-4165-8DCD-0AE00B2FD247}.Release|Any CPU.Build.0 = Release|Any CPU
-		{D456E609-3705-45D4-83BA-50A3C37E6AA6}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{D456E609-3705-45D4-83BA-50A3C37E6AA6}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{D456E609-3705-45D4-83BA-50A3C37E6AA6}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{D456E609-3705-45D4-83BA-50A3C37E6AA6}.Release|Any CPU.Build.0 = Release|Any CPU
 		{568D29A7-15B6-4090-A4FC-C1A93B64AB9F}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{568D29A7-15B6-4090-A4FC-C1A93B64AB9F}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{568D29A7-15B6-4090-A4FC-C1A93B64AB9F}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{568D29A7-15B6-4090-A4FC-C1A93B64AB9F}.Release|Any CPU.Build.0 = Release|Any CPU
+		{51900A05-4E76-44BA-8519-B335E3CA7F8E}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{51900A05-4E76-44BA-8519-B335E3CA7F8E}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{51900A05-4E76-44BA-8519-B335E3CA7F8E}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{51900A05-4E76-44BA-8519-B335E3CA7F8E}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

@@ -16,7 +16,8 @@ namespace MSSPVirusScanner
     {
         private string LogPath { get; set; }
 
-        private Scanner mScanner;
+        private MSSPScanner mScanner;
+        private MSSPBehaviourMonitor mMonitor;
         private Stopwatch mProgramTimer;
 
         public MSSPVirusScannerForm()
@@ -25,6 +26,8 @@ namespace MSSPVirusScanner
             PopulateTreeView();
 
             this.tvDirectories.NodeMouseClick += new TreeNodeMouseClickEventHandler(this.tvDirectories_NodeMouseClick);
+            this.btnTurnOnMonitor.Click += btnTurnOnMonitor_Click;
+            this.btnTurnOffMonitor.Click += btnTurnOffMonitor_Click;
             this.btnCancel.Click += btnCancel_Click;
             this.btnScan.Click += btnScan_Click;
             this.tickTimer.Tick += tickTimer_Tick;
@@ -59,7 +62,7 @@ namespace MSSPVirusScanner
 
             LogPath = string.Format("C:\\Work\\ScanLogs\\ScanLog_{0}_{1}.txt", DateTime.Now.Ticks, DateTime.Now.ToString("yyyyMMdd"));
 
-            mScanner = new Scanner(LogPath, this);
+            mScanner = new MSSPScanner(LogPath, this);
             mScanner.ProgressUpdateHandler += mScanner_ProgressUpdateHandler;
             mScanner.ScanCompleteHandler += mScanner_ScanCompleteHandler;
             mScanner.VirusDetectedHandler += mScanner_VirusDetectedHandler;
@@ -80,6 +83,55 @@ namespace MSSPVirusScanner
                 this.progressBar1.Value = e.ProgressPercentage;
         }
 
+        private void btnTurnOnMonitor_Click(object sender, EventArgs e)
+        {
+            this.btnTurnOnMonitor.Enabled = false;
+            this.btnTurnOffMonitor.Enabled = true;
+
+            mMonitor = new MSSPBehaviourMonitor(LogPath, this);
+            
+            MSSPBehaviourMonitor.OnFileCreated += MSSPBehaviourMonitor_OnFileCreated;
+            MSSPBehaviourMonitor.OnProcessHooked += MSSPBehaviourMonitor_OnProcessHooked;
+        }
+
+        private void btnTurnOffMonitor_Click(object sender, EventArgs e)
+        {
+            this.btnTurnOnMonitor.Enabled = true;
+            this.btnTurnOffMonitor.Enabled = false;
+
+            mMonitor.StopMonitoring();
+            mMonitor = null;
+
+            MSSPBehaviourMonitor.OnFileCreated += null;
+            MSSPBehaviourMonitor.OnProcessHooked += null;
+
+            lvMonitoredProcesses.Items.Clear();
+            txtBehaviourLog.Clear();
+        }
+
+        public void MSSPBehaviourMonitor_OnProcessHooked(int intProcessID, string strProcessName)
+        {
+            string[] processItems = { intProcessID.ToString(), strProcessName };
+            var oProcessItem = new ListViewItem(processItems);
+            
+            lvMonitoredProcesses.Items.Add(oProcessItem);
+        }
+
+        public void MSSPBehaviourMonitor_OnFileCreated(DateTime dtNow, int intProcessID, string strFileName)
+        {
+            txtBehaviourLog.AppendText(string.Format("{0}: Process {1} Opened \"{2}\" for Writing\n", dtNow.ToString(), intProcessID.ToString(), strFileName));
+        }
+
+        public void mMonitor_OnProcessHooked(int intProcessID, string strProcessName)
+        {
+            MessageBox.Show(strProcessName);
+        }
+
+        public void mMonitor_OnFileCreated(DateTime dtNow, int intProcessID, string strFileName)
+        {
+            MessageBox.Show(dtNow.ToShortDateString() + " " + intProcessID + " " + strFileName);
+        }
+
         private void btnCancel_Click(object sender, EventArgs e)
         {
             bgScanner.CancelAsync();
@@ -94,7 +146,7 @@ namespace MSSPVirusScanner
 
             mScanner = null;
 
-            Logger.WriteToLog(LogPath, "Scan Cancelled by User");
+            MSSPLogger.WriteToLog(LogPath, "Scan Cancelled by User");
         }
 
         private void mScanner_ProgressUpdateHandler(string strDirectory, string strFile, string strFileCount)
@@ -127,6 +179,13 @@ namespace MSSPVirusScanner
         private void mScanner_VirusDetectedHandler(string strDirectory, string strFile)
         {
             MessageBox.Show("Virus Detected in: " + strFile);
+            MSSPVirusActionDialog oDialog = new MSSPVirusActionDialog();
+
+            oDialog.Directory = strDirectory;
+            oDialog.File = strFile;
+            oDialog.Virus = "BLAARHGHGHGHGH";
+
+            oDialog.ShowDialog();
         }
 
         private void PopulateTreeView()
@@ -149,7 +208,7 @@ namespace MSSPVirusScanner
                 }
                 catch (Exception ex)
                 {
-                    Logger.WriteToLog(LogPath, "Error Populating Tree View. Error: " + ex.Message);
+                    MSSPLogger.WriteToLog(LogPath, "Error Populating Tree View. Error: " + ex.Message);
                 }
             }
         }
@@ -186,7 +245,7 @@ namespace MSSPVirusScanner
             }
             catch (Exception ex)
             {
-                Logger.WriteToLog(LogPath, "Error Populating Tree View. Error: " + ex.Message);
+                MSSPLogger.WriteToLog(LogPath, "Error Populating Tree View. Error: " + ex.Message);
             }
         }
     }

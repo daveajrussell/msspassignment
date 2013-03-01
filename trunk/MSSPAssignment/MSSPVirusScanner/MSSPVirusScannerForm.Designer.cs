@@ -29,9 +29,13 @@
         private void InitializeComponent()
         {
             this.components = new System.ComponentModel.Container();
+            this.imageList1 = new System.Windows.Forms.ImageList(this.components);
+            this.tickTimer = new System.Windows.Forms.Timer(this.components);
+            this.bgScanner = new System.ComponentModel.BackgroundWorker();
+            this.tcVirusApplication = new System.Windows.Forms.TabControl();
+            this.tabPage1 = new System.Windows.Forms.TabPage();
             this.scAppContainer = new System.Windows.Forms.SplitContainer();
             this.tvDirectories = new System.Windows.Forms.TreeView();
-            this.imageList1 = new System.Windows.Forms.ImageList(this.components);
             this.panel1 = new System.Windows.Forms.Panel();
             this.gbVirusScan = new System.Windows.Forms.GroupBox();
             this.txtItemsScanned = new System.Windows.Forms.Label();
@@ -53,20 +57,60 @@
             this.lblDir = new System.Windows.Forms.Label();
             this.lblText = new System.Windows.Forms.Label();
             this.btnScan = new System.Windows.Forms.Button();
-            this.tickTimer = new System.Windows.Forms.Timer(this.components);
-            this.bgScanner = new System.ComponentModel.BackgroundWorker();
+            this.tabPage2 = new System.Windows.Forms.TabPage();
+            this.groupBox1 = new System.Windows.Forms.GroupBox();
+            this.btnTurnOffMonitor = new System.Windows.Forms.Button();
+            this.txtBehaviourLog = new System.Windows.Forms.TextBox();
+            this.lvMonitoredProcesses = new System.Windows.Forms.ListView();
+            this.pidHeader = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
+            this.pName = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
+            this.btnTurnOnMonitor = new System.Windows.Forms.Button();
+            this.lblMonitoredProcess = new System.Windows.Forms.Label();
+            this.lblProcessLog = new System.Windows.Forms.Label();
+            this.tcVirusApplication.SuspendLayout();
+            this.tabPage1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.scAppContainer)).BeginInit();
             this.scAppContainer.Panel1.SuspendLayout();
             this.scAppContainer.Panel2.SuspendLayout();
             this.scAppContainer.SuspendLayout();
             this.panel1.SuspendLayout();
             this.gbVirusScan.SuspendLayout();
+            this.tabPage2.SuspendLayout();
+            this.groupBox1.SuspendLayout();
             this.SuspendLayout();
+            // 
+            // imageList1
+            // 
+            this.imageList1.ColorDepth = System.Windows.Forms.ColorDepth.Depth8Bit;
+            this.imageList1.ImageSize = new System.Drawing.Size(16, 16);
+            this.imageList1.TransparentColor = System.Drawing.Color.Transparent;
+            // 
+            // tcVirusApplication
+            // 
+            this.tcVirusApplication.Controls.Add(this.tabPage1);
+            this.tcVirusApplication.Controls.Add(this.tabPage2);
+            this.tcVirusApplication.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.tcVirusApplication.Location = new System.Drawing.Point(0, 0);
+            this.tcVirusApplication.Name = "tcVirusApplication";
+            this.tcVirusApplication.SelectedIndex = 0;
+            this.tcVirusApplication.Size = new System.Drawing.Size(692, 547);
+            this.tcVirusApplication.TabIndex = 0;
+            // 
+            // tabPage1
+            // 
+            this.tabPage1.Controls.Add(this.scAppContainer);
+            this.tabPage1.Location = new System.Drawing.Point(4, 22);
+            this.tabPage1.Name = "tabPage1";
+            this.tabPage1.Padding = new System.Windows.Forms.Padding(3);
+            this.tabPage1.Size = new System.Drawing.Size(684, 521);
+            this.tabPage1.TabIndex = 0;
+            this.tabPage1.Text = "Virus Scan";
+            this.tabPage1.UseVisualStyleBackColor = true;
             // 
             // scAppContainer
             // 
             this.scAppContainer.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.scAppContainer.Location = new System.Drawing.Point(0, 0);
+            this.scAppContainer.Location = new System.Drawing.Point(3, 3);
             this.scAppContainer.Name = "scAppContainer";
             // 
             // scAppContainer.Panel1
@@ -76,9 +120,9 @@
             // scAppContainer.Panel2
             // 
             this.scAppContainer.Panel2.Controls.Add(this.panel1);
-            this.scAppContainer.Size = new System.Drawing.Size(984, 337);
-            this.scAppContainer.SplitterDistance = 328;
-            this.scAppContainer.TabIndex = 0;
+            this.scAppContainer.Size = new System.Drawing.Size(678, 515);
+            this.scAppContainer.SplitterDistance = 226;
+            this.scAppContainer.TabIndex = 1;
             // 
             // tvDirectories
             // 
@@ -88,14 +132,8 @@
             this.tvDirectories.Location = new System.Drawing.Point(0, 0);
             this.tvDirectories.Name = "tvDirectories";
             this.tvDirectories.SelectedImageIndex = 0;
-            this.tvDirectories.Size = new System.Drawing.Size(328, 337);
+            this.tvDirectories.Size = new System.Drawing.Size(226, 515);
             this.tvDirectories.TabIndex = 0;
-            // 
-            // imageList1
-            // 
-            this.imageList1.ColorDepth = System.Windows.Forms.ColorDepth.Depth8Bit;
-            this.imageList1.ImageSize = new System.Drawing.Size(16, 16);
-            this.imageList1.TransparentColor = System.Drawing.Color.Transparent;
             // 
             // panel1
             // 
@@ -104,7 +142,7 @@
             this.panel1.Dock = System.Windows.Forms.DockStyle.Fill;
             this.panel1.Location = new System.Drawing.Point(0, 0);
             this.panel1.Name = "panel1";
-            this.panel1.Size = new System.Drawing.Size(652, 337);
+            this.panel1.Size = new System.Drawing.Size(448, 515);
             this.panel1.TabIndex = 0;
             // 
             // gbVirusScan
@@ -130,7 +168,7 @@
             this.gbVirusScan.Dock = System.Windows.Forms.DockStyle.Fill;
             this.gbVirusScan.Location = new System.Drawing.Point(0, 0);
             this.gbVirusScan.Name = "gbVirusScan";
-            this.gbVirusScan.Size = new System.Drawing.Size(652, 314);
+            this.gbVirusScan.Size = new System.Drawing.Size(448, 492);
             this.gbVirusScan.TabIndex = 1;
             this.gbVirusScan.TabStop = false;
             this.gbVirusScan.Text = "Virus Scan";
@@ -161,11 +199,11 @@
             // 
             // txtCurrentFile
             // 
-            this.txtCurrentFile.Location = new System.Drawing.Point(108, 204);
+            this.txtCurrentFile.Location = new System.Drawing.Point(108, 295);
             this.txtCurrentFile.Multiline = true;
             this.txtCurrentFile.Name = "txtCurrentFile";
             this.txtCurrentFile.ReadOnly = true;
-            this.txtCurrentFile.Size = new System.Drawing.Size(538, 40);
+            this.txtCurrentFile.Size = new System.Drawing.Size(327, 133);
             this.txtCurrentFile.TabIndex = 17;
             // 
             // txtCurrentDir
@@ -174,24 +212,24 @@
             this.txtCurrentDir.Multiline = true;
             this.txtCurrentDir.Name = "txtCurrentDir";
             this.txtCurrentDir.ReadOnly = true;
-            this.txtCurrentDir.Size = new System.Drawing.Size(538, 40);
+            this.txtCurrentDir.Size = new System.Drawing.Size(327, 133);
             this.txtCurrentDir.TabIndex = 16;
             // 
             // btnCancel
             // 
             this.btnCancel.Enabled = false;
-            this.btnCancel.Location = new System.Drawing.Point(466, 261);
+            this.btnCancel.Location = new System.Drawing.Point(10, 463);
             this.btnCancel.Name = "btnCancel";
-            this.btnCancel.Size = new System.Drawing.Size(180, 23);
+            this.btnCancel.Size = new System.Drawing.Size(175, 23);
             this.btnCancel.TabIndex = 12;
             this.btnCancel.Text = "Cancel";
             this.btnCancel.UseVisualStyleBackColor = true;
             // 
             // progressBar1
             // 
-            this.progressBar1.Location = new System.Drawing.Point(10, 261);
+            this.progressBar1.Location = new System.Drawing.Point(10, 434);
             this.progressBar1.Name = "progressBar1";
-            this.progressBar1.Size = new System.Drawing.Size(450, 23);
+            this.progressBar1.Size = new System.Drawing.Size(425, 23);
             this.progressBar1.TabIndex = 11;
             // 
             // lblStartTime
@@ -264,7 +302,7 @@
             // lblFile
             // 
             this.lblFile.AutoSize = true;
-            this.lblFile.Location = new System.Drawing.Point(7, 207);
+            this.lblFile.Location = new System.Drawing.Point(7, 298);
             this.lblFile.Name = "lblFile";
             this.lblFile.Size = new System.Drawing.Size(63, 13);
             this.lblFile.TabIndex = 2;
@@ -290,22 +328,119 @@
             // btnScan
             // 
             this.btnScan.Dock = System.Windows.Forms.DockStyle.Bottom;
-            this.btnScan.Location = new System.Drawing.Point(0, 314);
+            this.btnScan.Location = new System.Drawing.Point(0, 492);
             this.btnScan.Name = "btnScan";
-            this.btnScan.Size = new System.Drawing.Size(652, 23);
+            this.btnScan.Size = new System.Drawing.Size(448, 23);
             this.btnScan.TabIndex = 0;
             this.btnScan.Text = "Scan";
             this.btnScan.UseVisualStyleBackColor = true;
+            // 
+            // tabPage2
+            // 
+            this.tabPage2.Controls.Add(this.groupBox1);
+            this.tabPage2.Location = new System.Drawing.Point(4, 22);
+            this.tabPage2.Name = "tabPage2";
+            this.tabPage2.Padding = new System.Windows.Forms.Padding(3);
+            this.tabPage2.Size = new System.Drawing.Size(684, 521);
+            this.tabPage2.TabIndex = 1;
+            this.tabPage2.Text = "Behaviour Monitor";
+            this.tabPage2.UseVisualStyleBackColor = true;
+            // 
+            // groupBox1
+            // 
+            this.groupBox1.Controls.Add(this.lblProcessLog);
+            this.groupBox1.Controls.Add(this.lblMonitoredProcess);
+            this.groupBox1.Controls.Add(this.btnTurnOffMonitor);
+            this.groupBox1.Controls.Add(this.txtBehaviourLog);
+            this.groupBox1.Controls.Add(this.lvMonitoredProcesses);
+            this.groupBox1.Controls.Add(this.btnTurnOnMonitor);
+            this.groupBox1.Location = new System.Drawing.Point(8, 6);
+            this.groupBox1.Name = "groupBox1";
+            this.groupBox1.Size = new System.Drawing.Size(668, 507);
+            this.groupBox1.TabIndex = 0;
+            this.groupBox1.TabStop = false;
+            this.groupBox1.Text = "Behaviour Monitor";
+            // 
+            // btnTurnOffMonitor
+            // 
+            this.btnTurnOffMonitor.Enabled = false;
+            this.btnTurnOffMonitor.Location = new System.Drawing.Point(362, 478);
+            this.btnTurnOffMonitor.Name = "btnTurnOffMonitor";
+            this.btnTurnOffMonitor.Size = new System.Drawing.Size(300, 23);
+            this.btnTurnOffMonitor.TabIndex = 3;
+            this.btnTurnOffMonitor.Text = "Turn Off Behaviour Monitoring";
+            this.btnTurnOffMonitor.UseVisualStyleBackColor = true;
+            // 
+            // txtBehaviourLog
+            // 
+            this.txtBehaviourLog.Location = new System.Drawing.Point(7, 267);
+            this.txtBehaviourLog.Multiline = true;
+            this.txtBehaviourLog.Name = "txtBehaviourLog";
+            this.txtBehaviourLog.Size = new System.Drawing.Size(655, 205);
+            this.txtBehaviourLog.TabIndex = 2;
+            // 
+            // lvMonitoredProcesses
+            // 
+            this.lvMonitoredProcesses.Columns.AddRange(new System.Windows.Forms.ColumnHeader[] {
+            this.pidHeader,
+            this.pName});
+            this.lvMonitoredProcesses.GridLines = true;
+            this.lvMonitoredProcesses.HeaderStyle = System.Windows.Forms.ColumnHeaderStyle.Nonclickable;
+            this.lvMonitoredProcesses.Location = new System.Drawing.Point(7, 32);
+            this.lvMonitoredProcesses.Name = "lvMonitoredProcesses";
+            this.lvMonitoredProcesses.Size = new System.Drawing.Size(655, 212);
+            this.lvMonitoredProcesses.TabIndex = 1;
+            this.lvMonitoredProcesses.UseCompatibleStateImageBehavior = false;
+            this.lvMonitoredProcesses.View = System.Windows.Forms.View.Details;
+            // 
+            // pidHeader
+            // 
+            this.pidHeader.Text = "Process ID";
+            this.pidHeader.Width = 324;
+            // 
+            // pName
+            // 
+            this.pName.Text = "Process Name";
+            this.pName.Width = 327;
+            // 
+            // btnTurnOnMonitor
+            // 
+            this.btnTurnOnMonitor.Location = new System.Drawing.Point(6, 478);
+            this.btnTurnOnMonitor.Name = "btnTurnOnMonitor";
+            this.btnTurnOnMonitor.Size = new System.Drawing.Size(300, 23);
+            this.btnTurnOnMonitor.TabIndex = 0;
+            this.btnTurnOnMonitor.Text = "Turn On Behaviour Monitoring";
+            this.btnTurnOnMonitor.UseVisualStyleBackColor = true;
+            // 
+            // lblMonitoredProcess
+            // 
+            this.lblMonitoredProcess.AutoSize = true;
+            this.lblMonitoredProcess.Location = new System.Drawing.Point(6, 16);
+            this.lblMonitoredProcess.Name = "lblMonitoredProcess";
+            this.lblMonitoredProcess.Size = new System.Drawing.Size(106, 13);
+            this.lblMonitoredProcess.TabIndex = 4;
+            this.lblMonitoredProcess.Text = "Monitored Processes";
+            // 
+            // lblProcessLog
+            // 
+            this.lblProcessLog.AutoSize = true;
+            this.lblProcessLog.Location = new System.Drawing.Point(9, 251);
+            this.lblProcessLog.Name = "lblProcessLog";
+            this.lblProcessLog.Size = new System.Drawing.Size(103, 13);
+            this.lblProcessLog.TabIndex = 5;
+            this.lblProcessLog.Text = "Process Activity Log";
             // 
             // MSSPVirusScannerForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(984, 337);
-            this.Controls.Add(this.scAppContainer);
+            this.ClientSize = new System.Drawing.Size(692, 547);
+            this.Controls.Add(this.tcVirusApplication);
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedSingle;
             this.Name = "MSSPVirusScannerForm";
             this.Text = "MSSP Virus Scanner";
+            this.tcVirusApplication.ResumeLayout(false);
+            this.tabPage1.ResumeLayout(false);
             this.scAppContainer.Panel1.ResumeLayout(false);
             this.scAppContainer.Panel2.ResumeLayout(false);
             ((System.ComponentModel.ISupportInitialize)(this.scAppContainer)).EndInit();
@@ -313,19 +448,34 @@
             this.panel1.ResumeLayout(false);
             this.gbVirusScan.ResumeLayout(false);
             this.gbVirusScan.PerformLayout();
+            this.tabPage2.ResumeLayout(false);
+            this.groupBox1.ResumeLayout(false);
+            this.groupBox1.PerformLayout();
             this.ResumeLayout(false);
 
         }
 
         #endregion
 
+        private System.Windows.Forms.ImageList imageList1;
+        private System.Windows.Forms.Timer tickTimer;
+        private System.ComponentModel.BackgroundWorker bgScanner;
+        private System.Windows.Forms.TabControl tcVirusApplication;
+        private System.Windows.Forms.TabPage tabPage1;
         private System.Windows.Forms.SplitContainer scAppContainer;
         private System.Windows.Forms.TreeView tvDirectories;
-        private System.Windows.Forms.ImageList imageList1;
         private System.Windows.Forms.Panel panel1;
-        private System.Windows.Forms.Button btnScan;
         private System.Windows.Forms.GroupBox gbVirusScan;
-        private System.Windows.Forms.Label lblText;
+        private System.Windows.Forms.Label txtItemsScanned;
+        private System.Windows.Forms.Label txtElapsedTime;
+        private System.Windows.Forms.Label txtStartTime;
+        private System.Windows.Forms.TextBox txtCurrentFile;
+        private System.Windows.Forms.TextBox txtCurrentDir;
+        private System.Windows.Forms.Button btnCancel;
+        private System.Windows.Forms.ProgressBar progressBar1;
+        private System.Windows.Forms.Label lblStartTime;
+        private System.Windows.Forms.Label lblElapsedTime;
+        private System.Windows.Forms.Label lblItemsScanned;
         private System.Windows.Forms.Label lblScanned;
         private System.Windows.Forms.Label lblStart;
         private System.Windows.Forms.Label lblElapsed;
@@ -333,18 +483,18 @@
         private System.Windows.Forms.Label lblCurrentDir;
         private System.Windows.Forms.Label lblFile;
         private System.Windows.Forms.Label lblDir;
-        private System.Windows.Forms.Label lblStartTime;
-        private System.Windows.Forms.Label lblElapsedTime;
-        private System.Windows.Forms.Label lblItemsScanned;
-        private System.Windows.Forms.Button btnCancel;
-        private System.Windows.Forms.ProgressBar progressBar1;
-        private System.Windows.Forms.Label txtItemsScanned;
-        private System.Windows.Forms.Label txtElapsedTime;
-        private System.Windows.Forms.Label txtStartTime;
-        private System.Windows.Forms.TextBox txtCurrentFile;
-        private System.Windows.Forms.TextBox txtCurrentDir;
-        private System.Windows.Forms.Timer tickTimer;
-        private System.ComponentModel.BackgroundWorker bgScanner;
+        private System.Windows.Forms.Label lblText;
+        private System.Windows.Forms.Button btnScan;
+        private System.Windows.Forms.TabPage tabPage2;
+        private System.Windows.Forms.GroupBox groupBox1;
+        private System.Windows.Forms.TextBox txtBehaviourLog;
+        private System.Windows.Forms.ListView lvMonitoredProcesses;
+        private System.Windows.Forms.ColumnHeader pidHeader;
+        private System.Windows.Forms.ColumnHeader pName;
+        private System.Windows.Forms.Button btnTurnOnMonitor;
+        private System.Windows.Forms.Button btnTurnOffMonitor;
+        private System.Windows.Forms.Label lblProcessLog;
+        private System.Windows.Forms.Label lblMonitoredProcess;
 
     }
 }

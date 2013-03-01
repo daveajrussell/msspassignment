@@ -12,6 +12,9 @@ namespace MSSPVirusSignatureDatabase.Models
         [XmlElement("SIGNATURE_ID")]
         public int SIGNATURE_ID { get; set; }
 
+        [XmlElement("SIGNATURE_LOCATION")]
+        public string SIGNATURE_LOCATION { get; set; }
+
         [XmlElement("SIGNATURE_STRING")]
         public string SIGNATURE_STRING { get; set; }
     }

@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using EasyHook;
-using FileMon;
+using MSSPVirusScanner;
 using System.Threading;
 using System.Runtime.InteropServices;
 
@@ -11,13 +11,13 @@ namespace FileMonInject
 {
     public class Main : IEntryPoint
     {
-        FileMonInterface Interface;
+        MSSPBehaviourMonitorInterface Interface;
         LocalHook CreateFileHook;
         Stack<String> Queue = new Stack<string>();
 
         public Main(RemoteHooking.IContext InContext, String InChannelName)
         {
-            Interface = RemoteHooking.IpcConnectClient<FileMonInterface>(InChannelName);
+            Interface = RemoteHooking.IpcConnectClient<MSSPBehaviourMonitorInterface>(InChannelName);
         }
 
         public void Run(RemoteHooking.IContext InContext, String InChannelName)
