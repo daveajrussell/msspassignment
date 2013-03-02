@@ -19,38 +19,39 @@ namespace MSSPVirusSignatureDatabase
             dbContext = new VirusSignatureContext();
         }
 
-        public XMLVirusSignatures GetKnownSignatures()
+        public Signatures GetKnownSignatures()
         {
             try
             {
-                var data = (from signature in dbContext.VIRUS_SIGNATURE
-                            select signature).ToList();
-
-                var oDoc = new XDocument(new XElement("VIRUS_SIGNATURES", new XElement("SIGNATURES", from signature in data.AsEnumerable()
-                                                                                                     select new XElement("SIGNATURE",
-                                                                                                         new XAttribute("SIGNATURE_ID", signature.SIGNATURE_ID),
-                                                                                                         new XAttribute("SIGNATURE_LOCATION", signature.SIGNATURE_LOCATION),
-                                                                                                         new XAttribute("SINGATURE_STRING", signature.SIGNATURE_STRING)))));
+                var oDoc = new XDocument(new XElement("Signatures", from signature in dbContext.VIRUS_SIGNATURE.AsEnumerable()
+                                                                    select new XElement("Signature",
+                                                                        new XAttribute("ID", signature.SIGNATURE_ID),
+                                                                        new XAttribute("Location", signature.SIGNATURE_LOCATION),
+                                                                        new XAttribute("String", signature.SIGNATURE_STRING),
+                                                                        new XAttribute("Name", signature.SIGNATURE_NAME))));
 
                 File.Delete("MSSPVirusSignatures.xml");
 
-                using (var stream = new StreamWriter("MSSPVirusSignatures.xml", true))
+                using (var fs = File.OpenWrite("MSSPVirusSignatures.xml"))
                 {
-                    stream.Write(oDoc.ToString());
+                    using (var sw = new StreamWriter(fs))
+                    {
+                        sw.WriteLine(oDoc.ToString());
+                    }
                 }
 
-                XmlSerializer xmlSerializer = new XmlSerializer(typeof(XMLVirusSignatures));
-                using (var xmlStreamReader = new StreamReader("MSSPVirusSignatures.xml"))
+                XmlSerializer xmlSerializer = new XmlSerializer(typeof(Signatures));
+                using (var xmlStreamReader = XmlReader.Create("MSSPVirusSignatures.xml"))
                 {
-                    return (XMLVirusSignatures)xmlSerializer.Deserialize(xmlStreamReader);
+                    return (Signatures)xmlSerializer.Deserialize(xmlStreamReader);
                 }
             }
             catch (Exception e)
             {
-                XmlSerializer xmlSerializer = new XmlSerializer(typeof(XMLVirusSignatures));
-                using (var xmlStreamReader = new StreamReader("MSSPVirusSignatures.xml"))
+                XmlSerializer xmlSerializer = new XmlSerializer(typeof(Signatures));
+                using (var xmlStreamReader = XmlReader.Create("MSSPVirusSignatures.xml"))
                 {
-                    return (XMLVirusSignatures)xmlSerializer.Deserialize(xmlStreamReader);
+                    return (Signatures)xmlSerializer.Deserialize(xmlStreamReader);
                 }
             }
         }

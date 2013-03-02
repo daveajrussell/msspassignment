@@ -25,9 +25,9 @@ namespace MSSPVirusScanner
             InitializeComponent();
             PopulateTreeView();
 
+            StartBehaviourMonitor();
+
             this.tvDirectories.NodeMouseClick += new TreeNodeMouseClickEventHandler(this.tvDirectories_NodeMouseClick);
-            this.btnTurnOnMonitor.Click += btnTurnOnMonitor_Click;
-            this.btnTurnOffMonitor.Click += btnTurnOffMonitor_Click;
             this.btnCancel.Click += btnCancel_Click;
             this.btnScan.Click += btnScan_Click;
             this.tickTimer.Tick += tickTimer_Tick;
@@ -43,11 +43,20 @@ namespace MSSPVirusScanner
 
         private void tickTimer_Tick(object sender, EventArgs e)
         {
-            txtElapsedTime.Text = (mProgramTimer.ElapsedMilliseconds / 1000).ToString();
+            TimeSpan time = mProgramTimer.Elapsed;
+            txtElapsedTime.Text = string.Format("{0}:{1}:{2}", time.Hours <= 0 ? "00" : time.Hours < 10 ? "0" + time.Hours.ToString() : time.Hours.ToString(), 
+                                                               time.Minutes <= 0 ? "00" : time.Minutes < 10 ? "0" + time.Minutes.ToString() : time.Minutes.ToString(), 
+                                                               time.Seconds <= 0 ? "00" : time.Seconds < 10 ? "0" + time.Seconds.ToString() : time.Seconds.ToString());
         }
 
         private void btnScan_Click(object sender, EventArgs e)
         {
+            if (null == tvDirectories.SelectedNode)
+            {
+                MessageBox.Show("Select a Directory to Scan");
+                return;
+            }
+
             txtStartTime.Text = DateTime.Now.ToShortTimeString();
             tickTimer.Start();
             mProgramTimer.Start();
@@ -83,30 +92,12 @@ namespace MSSPVirusScanner
                 this.progressBar1.Value = e.ProgressPercentage;
         }
 
-        private void btnTurnOnMonitor_Click(object sender, EventArgs e)
+        private void StartBehaviourMonitor()
         {
-            this.btnTurnOnMonitor.Enabled = false;
-            this.btnTurnOffMonitor.Enabled = true;
-
             mMonitor = new MSSPBehaviourMonitor(LogPath, this);
             
             MSSPBehaviourMonitor.OnFileCreated += MSSPBehaviourMonitor_OnFileCreated;
             MSSPBehaviourMonitor.OnProcessHooked += MSSPBehaviourMonitor_OnProcessHooked;
-        }
-
-        private void btnTurnOffMonitor_Click(object sender, EventArgs e)
-        {
-            this.btnTurnOnMonitor.Enabled = true;
-            this.btnTurnOffMonitor.Enabled = false;
-
-            mMonitor.StopMonitoring();
-            mMonitor = null;
-
-            MSSPBehaviourMonitor.OnFileCreated += null;
-            MSSPBehaviourMonitor.OnProcessHooked += null;
-
-            lvMonitoredProcesses.Items.Clear();
-            txtBehaviourLog.Clear();
         }
 
         public void MSSPBehaviourMonitor_OnProcessHooked(int intProcessID, string strProcessName)
@@ -137,8 +128,6 @@ namespace MSSPVirusScanner
             bgScanner.CancelAsync();
             bgScanner.Dispose();
             tickTimer.Stop();
-            mProgramTimer.Stop();
-            mProgramTimer.Reset();
 
             this.progressBar1.Value = 0;
             this.btnCancel.Enabled = false;
@@ -156,13 +145,12 @@ namespace MSSPVirusScanner
             txtItemsScanned.Text = strFileCount;
         }
 
-        private void mScanner_ScanCompleteHandler(string strDirectory, string strDirectoryCount, string strFileCount, long lngElapsedMillis)
+        private void mScanner_ScanCompleteHandler(string strDirectory, string strDirectoryCount, string strFileCount)
         {
             bgScanner.CancelAsync();
             bgScanner.Dispose();
             tickTimer.Stop();
             mProgramTimer.Stop();
-            mProgramTimer.Reset();
 
             mScanner = null;
 
@@ -173,19 +161,22 @@ namespace MSSPVirusScanner
             txtCurrentDir.Text = "Scan of " + strDirectory + " Complete!";
             txtCurrentFile.Text = "";
             txtItemsScanned.Text = strFileCount + " Total Files Scanned!";
-            txtElapsedTime.Text = (lngElapsedMillis / 1000 * 60).ToString() + " Total Elapsed Time!";
+
+            TimeSpan time = mProgramTimer.Elapsed;
+
+            txtElapsedTime.Text = string.Format("{0}:{1}:{2} {3}", time.Hours <= 0 ? "00" : time.Hours < 10 ? "0" + time.Hours.ToString() : time.Hours.ToString(),
+                                                                   time.Minutes <= 0 ? "00" : time.Minutes < 10 ? "0" + time.Minutes.ToString() : time.Minutes.ToString(),
+                                                                   time.Seconds <= 0 ? "00" : time.Seconds < 10 ? "0" + time.Seconds.ToString() : time.Seconds.ToString(),
+                                                                   "Total Elapsed Time!");
+
+            mProgramTimer.Reset();
         }
 
-        private void mScanner_VirusDetectedHandler(string strDirectory, string strFile)
+        private void mScanner_VirusDetectedHandler(string strDirectory, string strFile, string strVirusName)
         {
-            MessageBox.Show("Virus Detected in: " + strFile);
-            MSSPVirusActionDialog oDialog = new MSSPVirusActionDialog();
+            MSSPVirusActionDialog oDialog = new MSSPVirusActionDialog(strDirectory, strFile, strVirusName);
 
-            oDialog.Directory = strDirectory;
-            oDialog.File = strFile;
-            oDialog.Virus = "BLAARHGHGHGHGH";
-
-            oDialog.ShowDialog();
+            oDialog.Show();
         }
 
         private void PopulateTreeView()

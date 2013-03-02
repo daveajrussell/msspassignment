@@ -18,7 +18,7 @@ namespace MSSPVirusScanner
         private DoWorkEventArgs WorkerEvent { get; set; }
         private MSSPVirusScannerForm Context { get; set; }
         private MSSPSignatureDatabase Signatures;
-        private XMLVirusSignatures VirusSignatures { get; set; }
+        private Signatures VirusSignatures { get; set; }
 
         private static int intAccumulatingFileCount;
         private static int intTotalFileCount;
@@ -26,8 +26,8 @@ namespace MSSPVirusScanner
         private static Stopwatch mainTimer;
 
         public delegate void ProgressUpdateDelegate(string strDirectory, string strFile, string strFileCount);
-        public delegate void ScanCompleteDelegate(string strDirectory, string strDirectoryCount, string strFileCount, long lngElapsedMillis);
-        public delegate void VirusDetectedDelegate(string strDirectory, string strFile);
+        public delegate void ScanCompleteDelegate(string strDirectory, string strDirectoryCount, string strFileCount);
+        public delegate void VirusDetectedDelegate(string strDirectory, string strFile, string strVirusName);
 
         public event ProgressUpdateDelegate ProgressUpdateHandler;
         public event ScanCompleteDelegate ScanCompleteHandler;
@@ -60,7 +60,7 @@ namespace MSSPVirusScanner
 
             if (null != ScanCompleteHandler)
             {
-                Context.Invoke(ScanCompleteHandler, e.Argument.ToString(), intDirectoryCount.ToString(), intTotalFileCount.ToString(), mainTimer.ElapsedMilliseconds);
+                Context.Invoke(ScanCompleteHandler, e.Argument.ToString(), intDirectoryCount.ToString(), intTotalFileCount.ToString());
             }
 
             Signatures.Close();
@@ -173,14 +173,14 @@ namespace MSSPVirusScanner
                     oFileStream.Read(arrBytes, 0, int.Parse(oFileStream.Length.ToString()));
                     strHex = BitConverter.ToString(arrBytes);
 
-                    foreach (var signature in VirusSignatures.Signatures)
+                    foreach (var signature in VirusSignatures.Items)
                     {
-                        if (strHex.Contains(signature.SIGNATURE_STRING))
+                        if (strHex.Contains(signature.String))
                         {
-                            MSSPLogger.WriteToLog(LogPath, "Virus with ID:" + signature.SIGNATURE_ID + " And Signature:" + signature.SIGNATURE_STRING + " Detected in File:" + strFile.Substring(strFile.LastIndexOf('\\') + 1));
+                            MSSPLogger.WriteToLog(LogPath, "Virus with ID:" + signature.ID + " And Signature:" + signature.String + " Detected in File:" + strFile.Substring(strFile.LastIndexOf('\\') + 1));
 
                             if (null != VirusDetectedHandler)
-                                Context.Invoke(VirusDetectedHandler, strFile.Substring(strFile.LastIndexOf('\\') + 1), strDirectory);
+                                Context.Invoke(VirusDetectedHandler, strDirectory, strFile.Substring(strFile.LastIndexOf('\\') + 1), signature.Name);
                         }
                     }
                 }

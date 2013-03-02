@@ -32,12 +32,12 @@
             this.btnQuarantine = new System.Windows.Forms.Button();
             this.btnDoNothing = new System.Windows.Forms.Button();
             this.groupBox1 = new System.Windows.Forms.GroupBox();
-            this.lblDirectory = new System.Windows.Forms.Label();
-            this.label1 = new System.Windows.Forms.Label();
-            this.label2 = new System.Windows.Forms.Label();
-            this.txtDirectory = new System.Windows.Forms.TextBox();
-            this.txtFile = new System.Windows.Forms.TextBox();
             this.txtVirus = new System.Windows.Forms.TextBox();
+            this.txtFile = new System.Windows.Forms.TextBox();
+            this.txtDirectory = new System.Windows.Forms.TextBox();
+            this.label2 = new System.Windows.Forms.Label();
+            this.label1 = new System.Windows.Forms.Label();
+            this.lblDirectory = new System.Windows.Forms.Label();
             this.groupBox1.SuspendLayout();
             this.SuspendLayout();
             // 
@@ -83,23 +83,35 @@
             this.groupBox1.TabStop = false;
             this.groupBox1.Text = "A Virus Has Been Detected!";
             // 
-            // lblDirectory
+            // txtVirus
             // 
-            this.lblDirectory.AutoSize = true;
-            this.lblDirectory.Location = new System.Drawing.Point(7, 20);
-            this.lblDirectory.Name = "lblDirectory";
-            this.lblDirectory.Size = new System.Drawing.Size(52, 13);
-            this.lblDirectory.TabIndex = 0;
-            this.lblDirectory.Text = "Directory:";
+            this.txtVirus.BorderStyle = System.Windows.Forms.BorderStyle.None;
+            this.txtVirus.Location = new System.Drawing.Point(66, 102);
+            this.txtVirus.Multiline = true;
+            this.txtVirus.Name = "txtVirus";
+            this.txtVirus.ReadOnly = true;
+            this.txtVirus.Size = new System.Drawing.Size(339, 35);
+            this.txtVirus.TabIndex = 5;
             // 
-            // label1
+            // txtFile
             // 
-            this.label1.AutoSize = true;
-            this.label1.Location = new System.Drawing.Point(7, 61);
-            this.label1.Name = "label1";
-            this.label1.Size = new System.Drawing.Size(26, 13);
-            this.label1.TabIndex = 1;
-            this.label1.Text = "File:";
+            this.txtFile.BorderStyle = System.Windows.Forms.BorderStyle.None;
+            this.txtFile.Location = new System.Drawing.Point(66, 61);
+            this.txtFile.Multiline = true;
+            this.txtFile.Name = "txtFile";
+            this.txtFile.ReadOnly = true;
+            this.txtFile.Size = new System.Drawing.Size(339, 35);
+            this.txtFile.TabIndex = 4;
+            // 
+            // txtDirectory
+            // 
+            this.txtDirectory.BorderStyle = System.Windows.Forms.BorderStyle.None;
+            this.txtDirectory.Location = new System.Drawing.Point(66, 20);
+            this.txtDirectory.Multiline = true;
+            this.txtDirectory.Name = "txtDirectory";
+            this.txtDirectory.ReadOnly = true;
+            this.txtDirectory.Size = new System.Drawing.Size(339, 35);
+            this.txtDirectory.TabIndex = 3;
             // 
             // label2
             // 
@@ -110,32 +122,23 @@
             this.label2.TabIndex = 2;
             this.label2.Text = "Virus:";
             // 
-            // txtDirectory
+            // label1
             // 
-            this.txtDirectory.BorderStyle = System.Windows.Forms.BorderStyle.None;
-            this.txtDirectory.Location = new System.Drawing.Point(66, 20);
-            this.txtDirectory.Multiline = true;
-            this.txtDirectory.Name = "txtDirectory";
-            this.txtDirectory.Size = new System.Drawing.Size(339, 35);
-            this.txtDirectory.TabIndex = 3;
+            this.label1.AutoSize = true;
+            this.label1.Location = new System.Drawing.Point(7, 61);
+            this.label1.Name = "label1";
+            this.label1.Size = new System.Drawing.Size(26, 13);
+            this.label1.TabIndex = 1;
+            this.label1.Text = "File:";
             // 
-            // txtFile
+            // lblDirectory
             // 
-            this.txtFile.BorderStyle = System.Windows.Forms.BorderStyle.None;
-            this.txtFile.Location = new System.Drawing.Point(66, 61);
-            this.txtFile.Multiline = true;
-            this.txtFile.Name = "txtFile";
-            this.txtFile.Size = new System.Drawing.Size(339, 35);
-            this.txtFile.TabIndex = 4;
-            // 
-            // txtVirus
-            // 
-            this.txtVirus.BorderStyle = System.Windows.Forms.BorderStyle.None;
-            this.txtVirus.Location = new System.Drawing.Point(66, 102);
-            this.txtVirus.Multiline = true;
-            this.txtVirus.Name = "txtVirus";
-            this.txtVirus.Size = new System.Drawing.Size(339, 35);
-            this.txtVirus.TabIndex = 5;
+            this.lblDirectory.AutoSize = true;
+            this.lblDirectory.Location = new System.Drawing.Point(7, 20);
+            this.lblDirectory.Name = "lblDirectory";
+            this.lblDirectory.Size = new System.Drawing.Size(52, 13);
+            this.lblDirectory.TabIndex = 0;
+            this.lblDirectory.Text = "Directory:";
             // 
             // MSSPVirusActionDialog
             // 
@@ -146,7 +149,7 @@
             this.Controls.Add(this.btnDoNothing);
             this.Controls.Add(this.btnQuarantine);
             this.Controls.Add(this.btnDelete);
-            this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.None;
+            this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedToolWindow;
             this.Name = "MSSPVirusActionDialog";
             this.Text = "MSSPVirusActionDialog";
             this.groupBox1.ResumeLayout(false);

@@ -59,14 +59,12 @@
             this.btnScan = new System.Windows.Forms.Button();
             this.tabPage2 = new System.Windows.Forms.TabPage();
             this.groupBox1 = new System.Windows.Forms.GroupBox();
-            this.btnTurnOffMonitor = new System.Windows.Forms.Button();
+            this.lblProcessLog = new System.Windows.Forms.Label();
+            this.lblMonitoredProcess = new System.Windows.Forms.Label();
             this.txtBehaviourLog = new System.Windows.Forms.TextBox();
             this.lvMonitoredProcesses = new System.Windows.Forms.ListView();
             this.pidHeader = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
             this.pName = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
-            this.btnTurnOnMonitor = new System.Windows.Forms.Button();
-            this.lblMonitoredProcess = new System.Windows.Forms.Label();
-            this.lblProcessLog = new System.Windows.Forms.Label();
             this.tcVirusApplication.SuspendLayout();
             this.tabPage1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.scAppContainer)).BeginInit();
@@ -350,10 +348,8 @@
             // 
             this.groupBox1.Controls.Add(this.lblProcessLog);
             this.groupBox1.Controls.Add(this.lblMonitoredProcess);
-            this.groupBox1.Controls.Add(this.btnTurnOffMonitor);
             this.groupBox1.Controls.Add(this.txtBehaviourLog);
             this.groupBox1.Controls.Add(this.lvMonitoredProcesses);
-            this.groupBox1.Controls.Add(this.btnTurnOnMonitor);
             this.groupBox1.Location = new System.Drawing.Point(8, 6);
             this.groupBox1.Name = "groupBox1";
             this.groupBox1.Size = new System.Drawing.Size(668, 507);
@@ -361,22 +357,31 @@
             this.groupBox1.TabStop = false;
             this.groupBox1.Text = "Behaviour Monitor";
             // 
-            // btnTurnOffMonitor
+            // lblProcessLog
             // 
-            this.btnTurnOffMonitor.Enabled = false;
-            this.btnTurnOffMonitor.Location = new System.Drawing.Point(362, 478);
-            this.btnTurnOffMonitor.Name = "btnTurnOffMonitor";
-            this.btnTurnOffMonitor.Size = new System.Drawing.Size(300, 23);
-            this.btnTurnOffMonitor.TabIndex = 3;
-            this.btnTurnOffMonitor.Text = "Turn Off Behaviour Monitoring";
-            this.btnTurnOffMonitor.UseVisualStyleBackColor = true;
+            this.lblProcessLog.AutoSize = true;
+            this.lblProcessLog.Location = new System.Drawing.Point(9, 266);
+            this.lblProcessLog.Name = "lblProcessLog";
+            this.lblProcessLog.Size = new System.Drawing.Size(103, 13);
+            this.lblProcessLog.TabIndex = 5;
+            this.lblProcessLog.Text = "Process Activity Log";
+            // 
+            // lblMonitoredProcess
+            // 
+            this.lblMonitoredProcess.AutoSize = true;
+            this.lblMonitoredProcess.Location = new System.Drawing.Point(6, 16);
+            this.lblMonitoredProcess.Name = "lblMonitoredProcess";
+            this.lblMonitoredProcess.Size = new System.Drawing.Size(106, 13);
+            this.lblMonitoredProcess.TabIndex = 4;
+            this.lblMonitoredProcess.Text = "Monitored Processes";
             // 
             // txtBehaviourLog
             // 
-            this.txtBehaviourLog.Location = new System.Drawing.Point(7, 267);
+            this.txtBehaviourLog.Location = new System.Drawing.Point(9, 282);
             this.txtBehaviourLog.Multiline = true;
             this.txtBehaviourLog.Name = "txtBehaviourLog";
-            this.txtBehaviourLog.Size = new System.Drawing.Size(655, 205);
+            this.txtBehaviourLog.ReadOnly = true;
+            this.txtBehaviourLog.Size = new System.Drawing.Size(655, 219);
             this.txtBehaviourLog.TabIndex = 2;
             // 
             // lvMonitoredProcesses
@@ -388,7 +393,7 @@
             this.lvMonitoredProcesses.HeaderStyle = System.Windows.Forms.ColumnHeaderStyle.Nonclickable;
             this.lvMonitoredProcesses.Location = new System.Drawing.Point(7, 32);
             this.lvMonitoredProcesses.Name = "lvMonitoredProcesses";
-            this.lvMonitoredProcesses.Size = new System.Drawing.Size(655, 212);
+            this.lvMonitoredProcesses.Size = new System.Drawing.Size(655, 231);
             this.lvMonitoredProcesses.TabIndex = 1;
             this.lvMonitoredProcesses.UseCompatibleStateImageBehavior = false;
             this.lvMonitoredProcesses.View = System.Windows.Forms.View.Details;
@@ -402,33 +407,6 @@
             // 
             this.pName.Text = "Process Name";
             this.pName.Width = 327;
-            // 
-            // btnTurnOnMonitor
-            // 
-            this.btnTurnOnMonitor.Location = new System.Drawing.Point(6, 478);
-            this.btnTurnOnMonitor.Name = "btnTurnOnMonitor";
-            this.btnTurnOnMonitor.Size = new System.Drawing.Size(300, 23);
-            this.btnTurnOnMonitor.TabIndex = 0;
-            this.btnTurnOnMonitor.Text = "Turn On Behaviour Monitoring";
-            this.btnTurnOnMonitor.UseVisualStyleBackColor = true;
-            // 
-            // lblMonitoredProcess
-            // 
-            this.lblMonitoredProcess.AutoSize = true;
-            this.lblMonitoredProcess.Location = new System.Drawing.Point(6, 16);
-            this.lblMonitoredProcess.Name = "lblMonitoredProcess";
-            this.lblMonitoredProcess.Size = new System.Drawing.Size(106, 13);
-            this.lblMonitoredProcess.TabIndex = 4;
-            this.lblMonitoredProcess.Text = "Monitored Processes";
-            // 
-            // lblProcessLog
-            // 
-            this.lblProcessLog.AutoSize = true;
-            this.lblProcessLog.Location = new System.Drawing.Point(9, 251);
-            this.lblProcessLog.Name = "lblProcessLog";
-            this.lblProcessLog.Size = new System.Drawing.Size(103, 13);
-            this.lblProcessLog.TabIndex = 5;
-            this.lblProcessLog.Text = "Process Activity Log";
             // 
             // MSSPVirusScannerForm
             // 
@@ -491,8 +469,6 @@
         private System.Windows.Forms.ListView lvMonitoredProcesses;
         private System.Windows.Forms.ColumnHeader pidHeader;
         private System.Windows.Forms.ColumnHeader pName;
-        private System.Windows.Forms.Button btnTurnOnMonitor;
-        private System.Windows.Forms.Button btnTurnOffMonitor;
         private System.Windows.Forms.Label lblProcessLog;
         private System.Windows.Forms.Label lblMonitoredProcess;
 
