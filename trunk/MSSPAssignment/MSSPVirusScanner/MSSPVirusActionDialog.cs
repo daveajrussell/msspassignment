@@ -11,17 +11,13 @@ namespace MSSPVirusScanner
 {
     public partial class MSSPVirusActionDialog : Form
     {
-        public string Directory { get; set; }
-        public string File { get; set; }
-        public string Virus { get; set; }
-
-        public MSSPVirusActionDialog()
+        public MSSPVirusActionDialog(string strDirectory, string strFile, string strVirus)
         {
             InitializeComponent();
 
-            this.txtDirectory.Text = Directory;
-            this.txtFile.Text = File;
-            this.txtVirus.Text = Virus;
+            this.txtDirectory.Text = strDirectory;
+            this.txtFile.Text = strFile;
+            this.txtVirus.Text = strVirus;
 
             this.btnDelete.Click += btnDelete_Click;
             this.btnQuarantine.Click += btnQuarantine_Click;

@@ -78,11 +78,6 @@ namespace MSSPVirusScanner
             }
         }
 
-        public void StopMonitoring()
-        {
-            Server.StopListening(null);
-        }
-
         internal static void InvokeOnFileCreated(DateTime dtNow, int intProcessID, string strFileName)
         {
             if (null != OnFileCreated)
