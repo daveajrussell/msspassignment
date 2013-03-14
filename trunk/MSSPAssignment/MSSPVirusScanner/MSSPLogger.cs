@@ -12,6 +12,9 @@ namespace MSSPVirusScanner
         {
             try
             {
+                if (!Directory.Exists("C:\\Work\\ScanLogs"))
+                    Directory.CreateDirectory("C:\\Work\\ScanLogs");
+
                 using (StreamWriter stream = new StreamWriter(strLogPath, true))
                 {
                     stream.WriteLine(DateTime.Now + ": " + strLogEntry);
