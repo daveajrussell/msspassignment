@@ -15,7 +15,7 @@ using System.Windows.Forms;
 namespace MSSPVirusScanner
 {
     /// <summary>
-    /// Class belonging to the main application
+    /// Class listing for the main virus scanning application.
     /// </summary>
     public partial class MSSPVirusScannerForm : Form
     {
@@ -28,40 +28,49 @@ namespace MSSPVirusScanner
         private MSSPFileSignatureAnalysisStrategy mIdentificationStrategy;
         
         /// <summary>
-        /// 
+        /// Class constructor. Initialise the form and all program variables.
         /// </summary>
         public MSSPVirusScannerForm()
         {
             InitializeComponent();
+            // Call function to populate the tree view file browser
             PopulateTreeView();
 
+            // Assign event handlers for the mouse click, timer tick and radio button handlers
             this.tvDirectories.NodeMouseClick += new TreeNodeMouseClickEventHandler(this.tvDirectories_NodeMouseClick);
             this.btnCancel.Click += btnCancel_Click;
             this.btnScan.Click += btnScan_Click;
             this.tickTimer.Tick += tickTimer_Tick;
 
+            // Assign a new file signature strategy based on the user selection
             this.rdoScanFull.CheckedChanged += rdoScanFull_CheckedChanged;
             this.rdoScanQuick.CheckedChanged += rdoScanQuick_CheckedChanged;
 
+            // Assign a new string scanning technique based on the selection
             this.rdoBoyerMoore.CheckedChanged += rdoBoyerMoore_CheckedChanged;
             this.rdoStringContains.CheckedChanged += rdoStringContains_CheckedChanged;
             this.rdoStringIndexOf.CheckedChanged += rdoStringIndexOf_CheckedChanged;
 
+            // Assign event handlers to the virus scanner background woker
             this.bgScanner.DoWork += bgScanner_DoWork;
             this.bgScanner.ProgressChanged += bgScanner_ProgressChanged;
 
+            // Allow the background worker to report its progress
             this.bgScanner.WorkerReportsProgress = true;
             this.bgScanner.WorkerSupportsCancellation = true;
 
+            // Assign a handler for the behaviour monitor background woker
             this.bgBehaviourMonitor.DoWork += bgBehaviourMonitor_DoWork;
 
             this.bgBehaviourMonitor.WorkerSupportsCancellation = true;
 
             this.mProgramTimer = new Stopwatch();
 
+            // Provide default values for the signature and string scanning strategies
             this.mStrategy = new BoyerMooreAnalysisStrategy();
             this.mIdentificationStrategy = new QuickScanStrategy();
 
+            // Start the behaviour monitor running
             StartBehaviourMonitor();
         }
 
