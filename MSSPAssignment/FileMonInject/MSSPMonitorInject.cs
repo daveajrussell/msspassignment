@@ -9,17 +9,30 @@ using System.Runtime.InteropServices;
 
 namespace FileMonInject
 {
+    /// <summary>
+    /// 
+    /// </summary>
     public class Main : IEntryPoint
     {
         MSSPBehaviourMonitorInterface Interface;
         LocalHook CreateFileHook;
         Stack<String> Queue = new Stack<string>();
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="InContext"></param>
+        /// <param name="InChannelName"></param>
         public Main(RemoteHooking.IContext InContext, String InChannelName)
         {
             Interface = RemoteHooking.IpcConnectClient<MSSPBehaviourMonitorInterface>(InChannelName);
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="InContext"></param>
+        /// <param name="InChannelName"></param>
         public void Run(RemoteHooking.IContext InContext, String InChannelName)
         {
             try
@@ -57,10 +70,6 @@ namespace FileMonInject
 
                         Interface.OnCreateFile(RemoteHooking.GetCurrentProcessId(), Package);
                     }
-                    else
-                    {
-                        Interface.Ping();
-                    }
                 }
             }
             catch (Exception ex)
@@ -69,6 +78,17 @@ namespace FileMonInject
             }
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="InFileName"></param>
+        /// <param name="InDesiredAccess"></param>
+        /// <param name="InSharedMode"></param>
+        /// <param name="InSecurityAttributes"></param>
+        /// <param name="InCreationDisposition"></param>
+        /// <param name="InFlagsAndAttributes"></param>
+        /// <param name="InTemplateFile"></param>
+        /// <returns></returns>
         [UnmanagedFunctionPointer(CallingConvention.StdCall,
             CharSet = CharSet.Unicode,
             SetLastError = true)]
@@ -81,6 +101,17 @@ namespace FileMonInject
             UInt32 InFlagsAndAttributes,
             IntPtr InTemplateFile);
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="InFileName"></param>
+        /// <param name="InDesiredAccess"></param>
+        /// <param name="InShareMode"></param>
+        /// <param name="InSecurityAttributes"></param>
+        /// <param name="InCreationDisposition"></param>
+        /// <param name="InFlagsAndAttributes"></param>
+        /// <param name="InTemplateFile"></param>
+        /// <returns></returns>
         [DllImport("kernel32.dll",
             CharSet = CharSet.Unicode,
             SetLastError = true,
@@ -93,7 +124,18 @@ namespace FileMonInject
               UInt32 InCreationDisposition,
               UInt32 InFlagsAndAttributes,
               IntPtr InTemplateFile);
-
+        
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="InFileName"></param>
+        /// <param name="InDesiredAccess"></param>
+        /// <param name="InShareMode"></param>
+        /// <param name="InSecurityAttributes"></param>
+        /// <param name="InCreationDisposition"></param>
+        /// <param name="InFlagsAndAttributes"></param>
+        /// <param name="InTemplateFile"></param>
+        /// <returns></returns>
         static IntPtr CreateFile_Hooked(
             String InFileName,
             UInt32 InDesiredAccess,

@@ -9,8 +9,18 @@ using System.Windows.Forms;
 
 namespace MSSPVirusScanner
 {
+    /// <summary>
+    /// A partial form to alert the user to a virus and prompt them 
+    /// to take an action.
+    /// </summary>
     public partial class MSSPVirusActionDialog : Form
     {
+        /// <summary>
+        /// Class constructor, inialising program variables
+        /// </summary>
+        /// <param name="strDirectory">The directory the infected file is in</param>
+        /// <param name="strFile">The infected file itself</param>
+        /// <param name="strVirus">The virus that was detected</param>
         public MSSPVirusActionDialog(string strDirectory, string strFile, string strVirus)
         {
             InitializeComponent();

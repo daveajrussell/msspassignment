@@ -67,9 +67,18 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="FileExtensionTypes.cs" />
+    <Compile Include="MSSPScanStrategies\FullScanStrategy.cs" />
+    <Compile Include="MSSPScanStrategies\IndexOfStrategy.cs" />
+    <Compile Include="MSSPScanStrategies\MSSPFileSignatureAnalysisStrategy.cs" />
+    <Compile Include="MSSPScanStrategies\MSSPFileSignatureAnalysisStrategyContext.cs" />
+    <Compile Include="MSSPScanStrategies\QuickScanStrategy.cs" />
+    <Compile Include="MSSPScanStrategies\BoyerMooreAnalysisStrategy.cs" />
+    <Compile Include="Utils\MSSPFileExtensionTypes.cs" />
+    <Compile Include="Interfaces\IMSSPScanner.cs" />
     <Compile Include="MSSPBehaviourMonitor.cs" />
-    <Compile Include="MSSPLogger.cs" />
+    <Compile Include="Utils\MSSPLogger.cs" />
+    <Compile Include="MSSPScanStrategies\MSSPSignatureAnaylsisStrategyContext.cs" />
+    <Compile Include="MSSPScanStrategies\ContainsAnalysisStrategy.cs" />
     <Compile Include="MSSPVirusActionDialog.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -85,6 +94,8 @@
     <Compile Include="MSSPVirusScanner.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="MSSPScanner.cs" />
+    <Compile Include="MSSPScanStrategies\MSSPSignatureAnalysisStrategy.cs" />
+    <Compile Include="Utils\MSSPUtils.cs" />
     <EmbeddedResource Include="MSSPVirusActionDialog.resx">
       <DependentUpon>MSSPVirusActionDialog.cs</DependentUpon>
     </EmbeddedResource>

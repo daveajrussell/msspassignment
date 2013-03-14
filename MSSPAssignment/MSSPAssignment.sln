@@ -1,8 +1,6 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 2012
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Engine", "MSSPAssignment\Engine.csproj", "{486BB51C-18CC-43FA-82CF-E1A2B042093C}"
-EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MSSPVirusScanner", "MSSPVirusScanner\MSSPVirusScanner.csproj", "{26BD20A5-DD82-49C2-AFE2-9C9212128A38}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MSSPVirusSignatureDatabase", "MSSPVirusSignatureDatabase\MSSPVirusSignatureDatabase.csproj", "{6B8CC002-E500-4165-8DCD-0AE00B2FD247}"
@@ -19,6 +17,8 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Dependencies", "Dependencie
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MSSPMaliciousProgram", "MaliciousProgram\MSSPMaliciousProgram.csproj", "{51900A05-4E76-44BA-8519-B335E3CA7F8E}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MSSPVirusScannerTest", "MSSPVirusScannerTest\MSSPVirusScannerTest.csproj", "{4C810635-16E2-4BFE-B6BB-D843F02CD762}"
+EndProject
 Global
 	GlobalSection(SubversionScc) = preSolution
 		Svn-Managed = True
@@ -29,10 +29,6 @@ Global
 		Release|Any CPU = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(ProjectConfigurationPlatforms) = postSolution
-		{486BB51C-18CC-43FA-82CF-E1A2B042093C}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{486BB51C-18CC-43FA-82CF-E1A2B042093C}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{486BB51C-18CC-43FA-82CF-E1A2B042093C}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{486BB51C-18CC-43FA-82CF-E1A2B042093C}.Release|Any CPU.Build.0 = Release|Any CPU
 		{26BD20A5-DD82-49C2-AFE2-9C9212128A38}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{26BD20A5-DD82-49C2-AFE2-9C9212128A38}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{26BD20A5-DD82-49C2-AFE2-9C9212128A38}.Release|Any CPU.ActiveCfg = Release|Any CPU
@@ -49,6 +45,10 @@ Global
 		{51900A05-4E76-44BA-8519-B335E3CA7F8E}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{51900A05-4E76-44BA-8519-B335E3CA7F8E}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{51900A05-4E76-44BA-8519-B335E3CA7F8E}.Release|Any CPU.Build.0 = Release|Any CPU
+		{4C810635-16E2-4BFE-B6BB-D843F02CD762}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{4C810635-16E2-4BFE-B6BB-D843F02CD762}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{4C810635-16E2-4BFE-B6BB-D843F02CD762}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{4C810635-16E2-4BFE-B6BB-D843F02CD762}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
