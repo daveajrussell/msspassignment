@@ -7,8 +7,21 @@ using System.Threading;
 
 namespace MaliciousProgram
 {
+    /// <summary>
+    /// Small program created for the sole purpose of 'hooking' into
+    /// to observe the program's behaviour.
+    /// 
+    /// This program opens and writes to a test file every 10 seconds
+    /// </summary>
     class MaliciousProgram
     {
+        /// <summary>
+        /// Main function
+        /// 
+        /// Every 10 seconds a file is opened for writing,
+        /// invoking the system32 call.
+        /// </summary>
+        /// <param name="args"></param>
         static void Main(string[] args)
         {
             while (true)

@@ -1,4 +1,6 @@
-﻿using System;
+﻿using MSSPVirusScanner.MSSPScanStrategies;
+using MSSPVirusScanner.Utils;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Data;
@@ -12,6 +14,9 @@ using System.Windows.Forms;
 
 namespace MSSPVirusScanner
 {
+    /// <summary>
+    /// Class belonging to the main application
+    /// </summary>
     public partial class MSSPVirusScannerForm : Form
     {
         private string LogPath { get; set; }
@@ -19,18 +24,28 @@ namespace MSSPVirusScanner
         private MSSPScanner mScanner;
         private MSSPBehaviourMonitor mMonitor;
         private Stopwatch mProgramTimer;
-
+        private MSSPSignatureAnalysisStrategy mStrategy;
+        private MSSPFileSignatureAnalysisStrategy mIdentificationStrategy;
+        
+        /// <summary>
+        /// 
+        /// </summary>
         public MSSPVirusScannerForm()
         {
             InitializeComponent();
             PopulateTreeView();
 
-            StartBehaviourMonitor();
-
             this.tvDirectories.NodeMouseClick += new TreeNodeMouseClickEventHandler(this.tvDirectories_NodeMouseClick);
             this.btnCancel.Click += btnCancel_Click;
             this.btnScan.Click += btnScan_Click;
             this.tickTimer.Tick += tickTimer_Tick;
+
+            this.rdoScanFull.CheckedChanged += rdoScanFull_CheckedChanged;
+            this.rdoScanQuick.CheckedChanged += rdoScanQuick_CheckedChanged;
+
+            this.rdoBoyerMoore.CheckedChanged += rdoBoyerMoore_CheckedChanged;
+            this.rdoStringContains.CheckedChanged += rdoStringContains_CheckedChanged;
+            this.rdoStringIndexOf.CheckedChanged += rdoStringIndexOf_CheckedChanged;
 
             this.bgScanner.DoWork += bgScanner_DoWork;
             this.bgScanner.ProgressChanged += bgScanner_ProgressChanged;
@@ -38,9 +53,73 @@ namespace MSSPVirusScanner
             this.bgScanner.WorkerReportsProgress = true;
             this.bgScanner.WorkerSupportsCancellation = true;
 
+            this.bgBehaviourMonitor.DoWork += bgBehaviourMonitor_DoWork;
+
+            this.bgBehaviourMonitor.WorkerSupportsCancellation = true;
+
             this.mProgramTimer = new Stopwatch();
+
+            this.mStrategy = new BoyerMooreAnalysisStrategy();
+            this.mIdentificationStrategy = new QuickScanStrategy();
+
+            StartBehaviourMonitor();
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        void rdoStringIndexOf_CheckedChanged(object sender, EventArgs e)
+        {
+            this.mStrategy = new IndexOfStrategy();
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        void rdoStringContains_CheckedChanged(object sender, EventArgs e)
+        {
+            this.mStrategy = new ContainsAnalysisStrategy();
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        void rdoBoyerMoore_CheckedChanged(object sender, EventArgs e)
+        {
+            this.mStrategy = new BoyerMooreAnalysisStrategy();
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void rdoScanQuick_CheckedChanged(object sender, EventArgs e)
+        {
+            this.mIdentificationStrategy = new QuickScanStrategy();
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void rdoScanFull_CheckedChanged(object sender, EventArgs e)
+        {
+            this.mIdentificationStrategy = new FullScanStrategy();
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         private void tickTimer_Tick(object sender, EventArgs e)
         {
             TimeSpan time = mProgramTimer.Elapsed;
@@ -49,6 +128,11 @@ namespace MSSPVirusScanner
                                                                time.Seconds <= 0 ? "00" : time.Seconds < 10 ? "0" + time.Seconds.ToString() : time.Seconds.ToString());
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         private void btnScan_Click(object sender, EventArgs e)
         {
             if (null == tvDirectories.SelectedNode)
@@ -63,6 +147,8 @@ namespace MSSPVirusScanner
 
             this.btnCancel.Enabled = true;
             this.btnScan.Enabled = false;
+            this.gbAnalysisOptions.Enabled = false;
+            this.gbScanOptions.Enabled = false;
 
             this.txtCurrentDir.Text = "";
             this.txtCurrentFile.Text = "";
@@ -71,7 +157,7 @@ namespace MSSPVirusScanner
 
             LogPath = string.Format("C:\\Work\\ScanLogs\\ScanLog_{0}_{1}.txt", DateTime.Now.Ticks, DateTime.Now.ToString("yyyyMMdd"));
 
-            mScanner = new MSSPScanner(LogPath, this);
+            mScanner = new MSSPScanner(LogPath, this, this.mStrategy, this.mIdentificationStrategy);
             mScanner.ProgressUpdateHandler += mScanner_ProgressUpdateHandler;
             mScanner.ScanCompleteHandler += mScanner_ScanCompleteHandler;
             mScanner.VirusDetectedHandler += mScanner_VirusDetectedHandler;
@@ -80,49 +166,11 @@ namespace MSSPVirusScanner
             bgScanner.RunWorkerAsync(strDirectoryToScan);
         }
 
-        private void bgScanner_DoWork(object sender, DoWorkEventArgs e)
-        {
-            BackgroundWorker oWorker = sender as BackgroundWorker;
-            mScanner.InitiateScan(oWorker, e);
-        }
-
-        private void bgScanner_ProgressChanged(object sender, ProgressChangedEventArgs e)
-        {
-            if (100 >= e.ProgressPercentage)
-                this.progressBar1.Value = e.ProgressPercentage;
-        }
-
-        private void StartBehaviourMonitor()
-        {
-            mMonitor = new MSSPBehaviourMonitor(LogPath, this);
-            
-            MSSPBehaviourMonitor.OnFileCreated += MSSPBehaviourMonitor_OnFileCreated;
-            MSSPBehaviourMonitor.OnProcessHooked += MSSPBehaviourMonitor_OnProcessHooked;
-        }
-
-        public void MSSPBehaviourMonitor_OnProcessHooked(int intProcessID, string strProcessName)
-        {
-            string[] processItems = { intProcessID.ToString(), strProcessName };
-            var oProcessItem = new ListViewItem(processItems);
-            
-            lvMonitoredProcesses.Items.Add(oProcessItem);
-        }
-
-        public void MSSPBehaviourMonitor_OnFileCreated(DateTime dtNow, int intProcessID, string strFileName)
-        {
-            txtBehaviourLog.AppendText(string.Format("{0}: Process {1} Opened \"{2}\" for Writing\n", dtNow.ToString(), intProcessID.ToString(), strFileName));
-        }
-
-        public void mMonitor_OnProcessHooked(int intProcessID, string strProcessName)
-        {
-            MessageBox.Show(strProcessName);
-        }
-
-        public void mMonitor_OnFileCreated(DateTime dtNow, int intProcessID, string strFileName)
-        {
-            MessageBox.Show(dtNow.ToShortDateString() + " " + intProcessID + " " + strFileName);
-        }
-
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         private void btnCancel_Click(object sender, EventArgs e)
         {
             bgScanner.CancelAsync();
@@ -133,11 +181,109 @@ namespace MSSPVirusScanner
             this.btnCancel.Enabled = false;
             this.btnScan.Enabled = true;
 
+            this.gbAnalysisOptions.Enabled = true;
+            this.gbScanOptions.Enabled = true;
+
             mScanner = null;
 
             MSSPLogger.WriteToLog(LogPath, "Scan Cancelled by User");
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void bgScanner_DoWork(object sender, DoWorkEventArgs e)
+        {
+            BackgroundWorker oWorker = sender as BackgroundWorker;
+            mScanner.InitiateScan(oWorker, e);
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void bgScanner_ProgressChanged(object sender, ProgressChangedEventArgs e)
+        {
+            if (100 >= e.ProgressPercentage)
+                this.progressBar1.Value = e.ProgressPercentage;
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        private void StartBehaviourMonitor()
+        {
+            mMonitor = new MSSPBehaviourMonitor(LogPath, this);
+            
+            MSSPBehaviourMonitor.OnFileCreated += MSSPBehaviourMonitor_OnFileCreated;
+            MSSPBehaviourMonitor.OnProcessHooked += MSSPBehaviourMonitor_OnProcessHooked;
+            this.bgBehaviourMonitor.RunWorkerAsync();
+       }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void bgBehaviourMonitor_DoWork(object sender, DoWorkEventArgs e)
+        {
+            mMonitor.InitiateMonitor();
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="intProcessID"></param>
+        /// <param name="strProcessName"></param>
+        public void MSSPBehaviourMonitor_OnProcessHooked(int intProcessID, string strProcessName)
+        {
+            string[] processItems = { intProcessID.ToString(), strProcessName };
+            var oProcessItem = new ListViewItem(processItems);
+            
+            lvMonitoredProcesses.Items.Add(oProcessItem);
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="dtNow"></param>
+        /// <param name="intProcessID"></param>
+        /// <param name="strFileName"></param>
+        public void MSSPBehaviourMonitor_OnFileCreated(DateTime dtNow, int intProcessID, string strFileName)
+        {
+            txtBehaviourLog.AppendText(string.Format("{0}: Process {1} Opened \"{2}\" for Writing\n", dtNow.ToString(), intProcessID.ToString(), strFileName));
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="intProcessID"></param>
+        /// <param name="strProcessName"></param>
+        public void mMonitor_OnProcessHooked(int intProcessID, string strProcessName)
+        {
+            MessageBox.Show(strProcessName);
+        }
+        
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="dtNow"></param>
+        /// <param name="intProcessID"></param>
+        /// <param name="strFileName"></param>
+        public void mMonitor_OnFileCreated(DateTime dtNow, int intProcessID, string strFileName)
+        {
+            MessageBox.Show(dtNow.ToShortDateString() + " " + intProcessID + " " + strFileName);
+        }
+        
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="strDirectory"></param>
+        /// <param name="strFile"></param>
+        /// <param name="strFileCount"></param>
         private void mScanner_ProgressUpdateHandler(string strDirectory, string strFile, string strFileCount)
         {
             txtCurrentDir.Text = strDirectory;
@@ -145,6 +291,12 @@ namespace MSSPVirusScanner
             txtItemsScanned.Text = strFileCount;
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="strDirectory"></param>
+        /// <param name="strDirectoryCount"></param>
+        /// <param name="strFileCount"></param>
         private void mScanner_ScanCompleteHandler(string strDirectory, string strDirectoryCount, string strFileCount)
         {
             bgScanner.CancelAsync();
@@ -172,6 +324,12 @@ namespace MSSPVirusScanner
             mProgramTimer.Reset();
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="strDirectory"></param>
+        /// <param name="strFile"></param>
+        /// <param name="strVirusName"></param>
         private void mScanner_VirusDetectedHandler(string strDirectory, string strFile, string strVirusName)
         {
             MSSPVirusActionDialog oDialog = new MSSPVirusActionDialog(strDirectory, strFile, strVirusName);
@@ -179,6 +337,9 @@ namespace MSSPVirusScanner
             oDialog.Show();
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
         private void PopulateTreeView()
         {
             TreeNode tnRoot;
@@ -204,6 +365,11 @@ namespace MSSPVirusScanner
             }
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="arrSubDirs"></param>
+        /// <param name="oParentNode"></param>
         private void GetDirectories(DirectoryInfo[] arrSubDirs, TreeNode oParentNode)
         {
             TreeNode aNode;
@@ -225,6 +391,11 @@ namespace MSSPVirusScanner
             }
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         private void tvDirectories_NodeMouseClick(object sender, TreeNodeMouseClickEventArgs e)
         {
             TreeNode newSelected = e.Node;

@@ -4,6 +4,9 @@ using System.Xml.Serialization;
 
 namespace MSSPVirusSignatureDatabase.Models
 {
+    /// <summary>
+    /// Entity Framework Virus model
+    /// </summary>
     public class VIRUS_SIGNATURE
     {
         public int SIGNATURE_ID { get; set; }
