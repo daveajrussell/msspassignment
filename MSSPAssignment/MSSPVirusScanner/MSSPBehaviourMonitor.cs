@@ -149,6 +149,8 @@ namespace MSSPVirusScanner
         {
             if (null != OnFileCreated)
                 Context.Invoke(OnFileCreated, dtNow, intProcessID, strFileName);
+
+            MSSPLogger.WriteToLog(LogPath,string.Format("{0}: Process {1} Opened \"{2}\" for Writing\n", dtNow.ToString(), intProcessID.ToString(), strFileName));
         }
 
         /// <summary>
@@ -161,6 +163,8 @@ namespace MSSPVirusScanner
 
             if (null != OnProcessHooked)
                 Context.Invoke(OnProcessHooked, oProcess.Id, oProcess.ProcessName);
+
+            MSSPLogger.WriteToLog(LogPath, string.Format("Successfully installed a hook in process with ID: {0}\n", intProcessID));
         }
 
         /// <summary>

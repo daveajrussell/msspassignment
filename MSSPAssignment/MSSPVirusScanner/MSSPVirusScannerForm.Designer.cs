@@ -29,6 +29,7 @@
         private void InitializeComponent()
         {
             this.components = new System.ComponentModel.Container();
+            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(MSSPVirusScannerForm));
             this.imageList1 = new System.Windows.Forms.ImageList(this.components);
             this.tickTimer = new System.Windows.Forms.Timer(this.components);
             this.bgScanner = new System.ComponentModel.BackgroundWorker();
@@ -409,7 +410,8 @@
             this.txtBehaviourLog.Multiline = true;
             this.txtBehaviourLog.Name = "txtBehaviourLog";
             this.txtBehaviourLog.ReadOnly = true;
-            this.txtBehaviourLog.Size = new System.Drawing.Size(655, 219);
+            this.txtBehaviourLog.ScrollBars = System.Windows.Forms.ScrollBars.Vertical;
+            this.txtBehaviourLog.Size = new System.Drawing.Size(655, 179);
             this.txtBehaviourLog.TabIndex = 2;
             // 
             // lvMonitoredProcesses
@@ -443,6 +445,7 @@
             this.ClientSize = new System.Drawing.Size(692, 499);
             this.Controls.Add(this.tcVirusApplication);
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedSingle;
+            this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
             this.Name = "MSSPVirusScannerForm";
             this.Text = "MSSP Virus Scanner";
             this.tcVirusApplication.ResumeLayout(false);

@@ -10,16 +10,27 @@ using System.Runtime.InteropServices;
 namespace FileMonInject
 {
     /// <summary>
+    /// This class creates the DLL used for hooking into the WIN32 API CreateFileW call.
+    /// CreateFileW - Create File for Writing. 
+    /// This is very basic behaviour monitoring, it is observing a process opening
+    /// a file for writing, an activity that a malcious program may very well do.
     /// 
+    /// This code has been distilled from the original article at: http://www.codeproject.com/Articles/27637/EasyHook-The-reinvention-of-Windows-API-hooking
+    /// and a much better understanding can be gained from this article.
+    /// I'll explain this code as I interpreted it.
     /// </summary>
     public class Main : IEntryPoint
     {
+        // Get an instance of the interface we created in the behaviour monitor
+        // class so that events from this class can be bubbled up to the
+        // main application.
         MSSPBehaviourMonitorInterface Interface;
         LocalHook CreateFileHook;
         Stack<String> Queue = new Stack<string>();
 
         /// <summary>
-        /// 
+        /// function to instantiate the interface with an
+        /// interprocess communication client.
         /// </summary>
         /// <param name="InContext"></param>
         /// <param name="InChannelName"></param>
@@ -29,7 +40,7 @@ namespace FileMonInject
         }
 
         /// <summary>
-        /// 
+        /// Main loop of the class.
         /// </summary>
         /// <param name="InContext"></param>
         /// <param name="InChannelName"></param>
@@ -37,6 +48,7 @@ namespace FileMonInject
         {
             try
             {
+                // Install the CreateFileW hook 
                 CreateFileHook = LocalHook.Create(
                     LocalHook.GetProcAddress("kernel32.dll", "CreateFileW"),
                     new DCreateFile(CreateFile_Hooked),
@@ -46,10 +58,15 @@ namespace FileMonInject
             }
             catch (Exception ex)
             {
+                // In the event of an exception, propogate an exception event to the calling 
+                // application through the interface
                 Interface.ReportException(ex);
                 return;
             }
 
+            // When a hook is installed in a process, bubble this event back
+            // to the calling application through the interface, passing the 
+            // ID of the hooked process
             Interface.IsInstalled(RemoteHooking.GetCurrentProcessId());
 
             try
@@ -60,14 +77,19 @@ namespace FileMonInject
 
                     if (Queue.Count > 0)
                     {
+                        // Any Open File for Write calls that were ran are added to the Queue,
+                        // every 500 ms this process runs and sends them to the 
+                        // calling application through the interface
                         String[] Package = null;
 
+                        // Lock the queue to ensure nothing is written to it during the dequeueing process
                         lock (Queue)
                         {
                             Package = Queue.ToArray();
                             Queue.Clear();
                         }
 
+                        // Send the information to the interface
                         Interface.OnCreateFile(RemoteHooking.GetCurrentProcessId(), Package);
                     }
                 }
@@ -79,16 +101,9 @@ namespace FileMonInject
         }
 
         /// <summary>
-        /// 
+        /// Get a pointer reference to the DCreateFile function
+        /// so that we may intercept the call in this class.
         /// </summary>
-        /// <param name="InFileName"></param>
-        /// <param name="InDesiredAccess"></param>
-        /// <param name="InSharedMode"></param>
-        /// <param name="InSecurityAttributes"></param>
-        /// <param name="InCreationDisposition"></param>
-        /// <param name="InFlagsAndAttributes"></param>
-        /// <param name="InTemplateFile"></param>
-        /// <returns></returns>
         [UnmanagedFunctionPointer(CallingConvention.StdCall,
             CharSet = CharSet.Unicode,
             SetLastError = true)]
@@ -102,16 +117,9 @@ namespace FileMonInject
             IntPtr InTemplateFile);
 
         /// <summary>
-        /// 
+        /// As this is C# we need to get native access
+        /// to the win32 API.
         /// </summary>
-        /// <param name="InFileName"></param>
-        /// <param name="InDesiredAccess"></param>
-        /// <param name="InShareMode"></param>
-        /// <param name="InSecurityAttributes"></param>
-        /// <param name="InCreationDisposition"></param>
-        /// <param name="InFlagsAndAttributes"></param>
-        /// <param name="InTemplateFile"></param>
-        /// <returns></returns>
         [DllImport("kernel32.dll",
             CharSet = CharSet.Unicode,
             SetLastError = true,
@@ -126,16 +134,11 @@ namespace FileMonInject
               IntPtr InTemplateFile);
         
         /// <summary>
-        /// 
+        /// It seems that all of the API calls that we've registered to be 
+        /// listened to in the hooked process are intercepted and are  ran through
+        /// this class, so we need to call the original API
+        /// once the call has passed through this class
         /// </summary>
-        /// <param name="InFileName"></param>
-        /// <param name="InDesiredAccess"></param>
-        /// <param name="InShareMode"></param>
-        /// <param name="InSecurityAttributes"></param>
-        /// <param name="InCreationDisposition"></param>
-        /// <param name="InFlagsAndAttributes"></param>
-        /// <param name="InTemplateFile"></param>
-        /// <returns></returns>
         static IntPtr CreateFile_Hooked(
             String InFileName,
             UInt32 InDesiredAccess,
