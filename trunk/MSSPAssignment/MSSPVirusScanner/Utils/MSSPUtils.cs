@@ -24,5 +24,13 @@ namespace MSSPVirusScanner.Utils
             SoapHexBinary shb = new SoapHexBinary(arrBytes);
             return shb.ToString();
         }
+
+        public static string ElapsedTime(TimeSpan time)
+        {
+            return string.Format("{0}:{1}:{2}:{3}", time.Hours <= 0 ? "00" : time.Hours < 10 ? "0" + time.Hours.ToString() : time.Hours.ToString(),
+                                                    time.Minutes <= 0 ? "00" : time.Minutes < 10 ? "0" + time.Minutes.ToString() : time.Minutes.ToString(),
+                                                    time.Seconds <= 0 ? "00" : time.Seconds < 10 ? "0" + time.Seconds.ToString() : time.Seconds.ToString(),
+                                                    time.Milliseconds <= 0 ? "00" : time.Milliseconds < 10 ? "0" + time.Milliseconds.ToString() : time.Milliseconds.ToString());
+        }
     }
 }

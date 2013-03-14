@@ -28,6 +28,7 @@
         /// </summary>
         private void InitializeComponent()
         {
+            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(MSSPVirusActionDialog));
             this.btnDelete = new System.Windows.Forms.Button();
             this.btnQuarantine = new System.Windows.Forms.Button();
             this.btnDoNothing = new System.Windows.Forms.Button();
@@ -43,6 +44,7 @@
             // 
             // btnDelete
             // 
+            this.btnDelete.DialogResult = System.Windows.Forms.DialogResult.Cancel;
             this.btnDelete.Location = new System.Drawing.Point(12, 178);
             this.btnDelete.Name = "btnDelete";
             this.btnDelete.Size = new System.Drawing.Size(75, 23);
@@ -52,6 +54,7 @@
             // 
             // btnQuarantine
             // 
+            this.btnQuarantine.DialogResult = System.Windows.Forms.DialogResult.Cancel;
             this.btnQuarantine.Location = new System.Drawing.Point(184, 178);
             this.btnQuarantine.Name = "btnQuarantine";
             this.btnQuarantine.Size = new System.Drawing.Size(75, 23);
@@ -61,6 +64,7 @@
             // 
             // btnDoNothing
             // 
+            this.btnDoNothing.DialogResult = System.Windows.Forms.DialogResult.Cancel;
             this.btnDoNothing.Location = new System.Drawing.Point(348, 178);
             this.btnDoNothing.Name = "btnDoNothing";
             this.btnDoNothing.Size = new System.Drawing.Size(75, 23);
@@ -149,7 +153,8 @@
             this.Controls.Add(this.btnDoNothing);
             this.Controls.Add(this.btnQuarantine);
             this.Controls.Add(this.btnDelete);
-            this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedToolWindow;
+            this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedDialog;
+            this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
             this.Name = "MSSPVirusActionDialog";
             this.Text = "MSSPVirusActionDialog";
             this.groupBox1.ResumeLayout(false);

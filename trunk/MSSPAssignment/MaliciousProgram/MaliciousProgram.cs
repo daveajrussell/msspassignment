@@ -28,12 +28,20 @@ namespace MaliciousProgram
             {
                 Thread.Sleep(10000);
 
-                using (var fs = File.OpenWrite("C:\\Test.txt"))
+                try
                 {
-                    using (var sw = new StreamWriter(fs))
+                    using (var fs = File.OpenWrite("C:\\Test.txt"))
                     {
-                        sw.WriteLine(DateTime.Now);
+                        using (var sw = new StreamWriter(fs))
+                        {
+                            sw.WriteLine(DateTime.Now);
+                        }
                     }
+                }
+                // An exception will be thrown if this process is not started with admin rights.
+                catch (Exception ex)
+                {
+                    Console.WriteLine(ex);
                 }
             }
         }

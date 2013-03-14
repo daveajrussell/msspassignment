@@ -218,17 +218,18 @@ namespace MSSPVirusScanner
         public void ScanHex(string strDirectory, string strFile)
         {
             string strHex = null;
+            Stopwatch mScanTimer = new Stopwatch();
             try
             {
                 // Open the file into a stream of bytes
                 using (FileStream oFileStream = new FileStream(strFile, FileMode.Open))
                 {
-                    MSSPLogger.WriteToLog(LogPath, "Examining: " + strFile.Substring(strFile.LastIndexOf('\\') + 1));
-
                     // Convert the bytes to a string of hex
                     byte[] arrBytes = new byte[oFileStream.Length];
                     oFileStream.Read(arrBytes, 0, int.Parse(oFileStream.Length.ToString()));
                     strHex = MSSPUtils.ByteArrayToString(arrBytes);
+
+                    mScanTimer.Start();
 
                     // Iterate through all of the virus signatures
                     foreach (var signature in VirusSignatures.Items)
@@ -244,6 +245,9 @@ namespace MSSPVirusScanner
                                 Context.Invoke(VirusDetectedHandler, strDirectory, strFile.Substring(strFile.LastIndexOf('\\') + 1), signature.Name);
                         }
                     }
+
+                    mScanTimer.Stop();
+                    MSSPLogger.WriteToLog(LogPath, strFile.Substring(strFile.LastIndexOf('\\') + 1) + " scanned for " + VirusSignatures.Items.Count() + " viruses in " + MSSPUtils.ElapsedTime(mScanTimer.Elapsed));
                 }
             }
             catch (Exception ex)
