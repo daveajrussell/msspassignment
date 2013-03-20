@@ -45,17 +45,24 @@ namespace MSSPVirusSignatureDatabase
                                                                         new XAttribute("String", signature.SIGNATURE_STRING),
                                                                         new XAttribute("Name", signature.SIGNATURE_NAME))));
 
-                // Delete the old file
-                File.Delete("MSSPVirusSignatures.xml");
-
-                // Create a new xml file
-                using (var fs = File.OpenWrite("MSSPVirusSignatures.xml"))
+                try
                 {
-                    // Write the xml into the file stream for saving
-                    using (var sw = new StreamWriter(fs))
+                    // Delete the old file
+                    File.Delete("MSSPVirusSignatures.xml");
+
+                    // Create a new xml file
+                    using (var fs = File.OpenWrite("MSSPVirusSignatures.xml"))
                     {
-                        sw.WriteLine(oDoc.ToString());
+                        // Write the xml into the file stream for saving
+                        using (var sw = new StreamWriter(fs))
+                        {
+                            sw.WriteLine(oDoc.ToString());
+                        }
                     }
+                }
+                catch (Exception ex)
+                {
+                    
                 }
 
                 // Using the auto generated Signatures class (using XSD.exe), deserialise 
