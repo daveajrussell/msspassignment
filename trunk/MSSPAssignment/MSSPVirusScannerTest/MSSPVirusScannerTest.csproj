@@ -75,6 +75,23 @@
     </None>
     <None Include="packages.config" />
   </ItemGroup>
+  <ItemGroup>
+    <Content Include="TestMaliciousFile_100MB.exe">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="TestMaliciousFile_10MB.exe">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="TestMaliciousFile_1MB.exe">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="TestMaliciousFile_25MB.exe">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="TestMaliciousFile_50MB.exe">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+  </ItemGroup>
   <Choose>
     <When Condition="'$(VisualStudioVersion)' == '10.0' And '$(IsCodedUITest)' == 'True'">
       <ItemGroup>

@@ -60,11 +60,11 @@ namespace MSSPVirusScannerTest
                 "C2986F8337C1D5E146BB4D55FD4C7B25"
             };
 
-            _file1MB = @"C:\Work\TestFile1Mb.dll";
-            _file10MB = @"C:\Work\TestFile10Mb.dll";
-            _file25MB = @"C:\Work\TestFile25Mb.dll";
-            _file50MB = @"C:\Work\TestFile50Mb.dll";
-            _file100MB = @"C:\Work\TestFile100Mb.dll";
+            _file1MB = @"TestMaliciousFile_1MB.exe";
+            _file10MB = @"TestMaliciousFile_10MB.exe";
+            _file25MB = @"TestMaliciousFile_25MB.exe";
+            _file50MB = @"TestMaliciousFile_50MB.exe";
+            _file100MB = @"TestMaliciousFile_100MB.exe";
         }
 
         [TestMethod]
